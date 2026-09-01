@@ -43,7 +43,9 @@ const requiredFiles = [
   'c4/lines.json',
   'c4/diagnostics.json',
   'c4/skill_profiles.json',
-  'c4/allocation_candidates.json'
+  'c4/allocation_candidates.json',
+  'c2/demo_inputs.json',
+  'c2/cad_demo.json'
 ];
 
 let hasErrors = false;
@@ -171,7 +173,25 @@ data['c2/runs.json'].forEach((run, i) => {
   if (!knownBatches.has(run.batch_id)) error(`Invalid batch_id ${run.batch_id} in C2 runs[${i}]`);
   if (!knownOrders.has(run.order_id)) error(`Invalid order_id ${run.order_id} in C2 runs[${i}]`);
   if (!knownStyles.has(run.style_id)) error(`Invalid style_id ${run.style_id} in C2 runs[${i}]`);
-  if (!knownMarkers.has(run.marker_id)) error(`Invalid marker_id ${run.marker_id} in C2 runs[${i}]`);
+  if (run.issued_fabric_weight_kg !== undefined) {
+    if (typeof run.issued_fabric_weight_kg !== 'number' || run.issued_fabric_weight_kg <= 0) error(`Invalid issued_fabric_weight_kg in C2 runs[${i}]`);
+  }
+  if (run.predicted_realised_waste_pct !== undefined) {
+    if (typeof run.predicted_realised_waste_pct !== 'number' || run.predicted_realised_waste_pct < 0 || run.predicted_realised_waste_pct > 100) error(`Invalid predicted_realised_waste_pct in C2 runs[${i}]`);
+  }
+  if (run.estimated_waste_weight_kg !== undefined) {
+    if (typeof run.estimated_waste_weight_kg !== 'number' || run.estimated_waste_weight_kg < 0) error(`Invalid estimated_waste_weight_kg in C2 runs[${i}]`);
+  }
+  if (run.fabric_cost_basis_lkr_per_kg !== undefined) {
+    if (typeof run.fabric_cost_basis_lkr_per_kg !== 'number' || run.fabric_cost_basis_lkr_per_kg < 0) error(`Invalid fabric_cost_basis_lkr_per_kg in C2 runs[${i}]`);
+  }
+  if (run.estimated_waste_value_lkr !== undefined) {
+    if (typeof run.estimated_waste_value_lkr !== 'number' || run.estimated_waste_value_lkr < 0) error(`Invalid estimated_waste_value_lkr in C2 runs[${i}]`);
+  }
+  if (run.data_classification !== undefined) {
+    if (run.data_classification !== 'SYNTHETIC_DEMONSTRATION') error(`Invalid data_classification in C2 runs[${i}]`);
+  }
+  
   knownRuns.add(run.run_id);
 });
 
@@ -194,6 +214,51 @@ data['c2/strategies.json'].forEach((strategy, i) => {
   if (knownStrategies.has(strategy.strategy_id)) error(`Duplicate strategy_id ${strategy.strategy_id} in C2 strategies[${i}]`);
   knownStrategies.add(strategy.strategy_id);
 });
+
+// Validate C2 Demo Inputs
+if (data['c2/demo_inputs.json']) {
+  const di = data['c2/demo_inputs.json'];
+  if (di.input_mode !== 'DEMO_SAMPLE') error(`Invalid input_mode in C2 demo_inputs`);
+  if (di.data_classification !== 'SYNTHETIC_DEMONSTRATION') error(`Invalid data_classification in C2 demo_inputs`);
+  if (di.used_for_prediction !== false) error(`used_for_prediction must be false in C2 demo_inputs`);
+  if (di.output_mode !== 'DEMO_PRECOMPUTED') error(`Invalid output_mode in C2 demo_inputs`);
+  
+  if (!di.erp || typeof di.erp.draft_order_quantity !== 'number' || di.erp.draft_order_quantity <= 0) error(`Invalid draft_order_quantity in C2 demo_inputs`);
+  if (typeof di.erp.gsm !== 'number' || di.erp.gsm <= 0) error(`Invalid gsm in C2 demo_inputs`);
+  
+  if (!di.pre_cut || typeof di.pre_cut.number_of_plies !== 'number' || di.pre_cut.number_of_plies <= 0) error(`Invalid number_of_plies in C2 demo_inputs`);
+  if (typeof di.pre_cut.spread_length !== 'number' || di.pre_cut.spread_length <= 0) error(`Invalid spread_length in C2 demo_inputs`);
+  if (typeof di.pre_cut.defects_per_lay !== 'number' || di.pre_cut.defects_per_lay < 0) error(`Invalid defects_per_lay in C2 demo_inputs`);
+  if (typeof di.pre_cut.end_allowance !== 'number' || di.pre_cut.end_allowance < 0) error(`Invalid end_allowance in C2 demo_inputs`);
+  if (typeof di.pre_cut.machine_width !== 'number' || di.pre_cut.machine_width <= 0) error(`Invalid machine_width in C2 demo_inputs`);
+  if (typeof di.pre_cut.cut_table_width !== 'number' || di.pre_cut.cut_table_width <= 0) error(`Invalid cut_table_width in C2 demo_inputs`);
+  if (typeof di.pre_cut.lay_height_limit !== 'number' || di.pre_cut.lay_height_limit <= 0) error(`Invalid lay_height_limit in C2 demo_inputs`);
+  if (typeof di.pre_cut.review_threshold !== 'number' || di.pre_cut.review_threshold <= 0 || di.pre_cut.review_threshold >= 100) error(`Invalid review_threshold in C2 demo_inputs`);
+  if (di.pre_cut.shift !== 'SHIFT-A') error(`Invalid shift in C2 demo_inputs`);
+}
+
+// Validate C2 CAD Demo
+if (data['c2/cad_demo.json']) {
+  const cd = data['c2/cad_demo.json'];
+  if (cd.run_id !== 'RUN-C2-0001') error(`Invalid run_id in C2 cad_demo`);
+  if (!knownMarkers.has(cd.official_marker_id)) error(`Invalid official_marker_id in C2 cad_demo`);
+  if (cd.input_mode !== 'DEMO_SAMPLE') error(`Invalid input_mode in C2 cad_demo`);
+  if (cd.output_mode !== 'DEMO_PRECOMPUTED') error(`Invalid output_mode in C2 cad_demo`);
+  if (cd.data_classification !== 'SYNTHETIC_DEMONSTRATION') error(`Invalid data_classification in C2 cad_demo`);
+  if (cd.used_for_prediction !== false) error(`used_for_prediction must be false in C2 cad_demo`);
+  
+  if (!cd.cad || typeof cd.cad.marker_width !== 'number' || cd.cad.marker_width <= 0) error(`Invalid marker_width in C2 cad_demo`);
+  if (typeof cd.cad.marker_length !== 'number' || cd.cad.marker_length <= 0) error(`Invalid marker_length in C2 cad_demo`);
+  if (typeof cd.cad.pattern_piece_count !== 'number' || cd.cad.pattern_piece_count <= 0) error(`Invalid pattern_piece_count in C2 cad_demo`);
+  if (typeof cd.cad.total_piece_area !== 'number' || cd.cad.total_piece_area <= 0) error(`Invalid total_piece_area in C2 cad_demo`);
+  if (typeof cd.cad.marker_efficiency !== 'number' || cd.cad.marker_efficiency <= 0 || cd.cad.marker_efficiency > 100) error(`Invalid marker_efficiency in C2 cad_demo`);
+  
+  const validParserStatuses = ['DEMO_FIXTURE_LOADED', 'PREVIEW_READY', 'ACCEPTED'];
+  if (!validParserStatuses.includes(cd.cad.parser_status)) error(`Invalid parser_status in C2 cad_demo`);
+  
+  if (!Array.isArray(cd.cad.pattern_piece_summary) || cd.cad.pattern_piece_summary.length === 0) error(`Invalid pattern_piece_summary in C2 cad_demo`);
+}
+
 
 // Validate C3 predictions
 data['c3/predictions.json'].forEach((pred, i) => {

@@ -11,7 +11,13 @@
     "risk_status": "HIGH",
     "strategy_status": "REVIEW_REQUIRED",
     "post_cut_validation_status": "NOT_AVAILABLE",
-    "output_mode": "DEMO_PRECOMPUTED"
+    "output_mode": "DEMO_PRECOMPUTED",
+    "issued_fabric_weight_kg": 547.5,
+    "estimated_waste_weight_kg": 64.6,
+    "fabric_cost_basis_lkr_per_kg": 840,
+    "estimated_waste_value_lkr": 54264,
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "used_for_live_prediction": false
   },
   {
     "run_id": "RUN-C2-0002",

@@ -1,0 +1,38 @@
+{
+  "input_mode": "DEMO_SAMPLE",
+  "data_classification": "SYNTHETIC_DEMONSTRATION",
+  "used_for_prediction": false,
+  "output_mode": "DEMO_PRECOMPUTED",
+  "erp": {
+    "draft_order_quantity": 5000,
+    "fabric_composition": "60% Cotton / 40% Polyester",
+    "gsm": 180,
+    "supplier": "DEMO-TEXTILE-SUPPLIER",
+    "lot": "DEMO-LOT-2026-01",
+    "size_ratio": "S:M:L:XL = 1:2:2:1",
+    "fabric_price": 850,
+    "planned_delivery_date": "2026-09-15"
+  },
+  "pre_cut": {
+    "number_of_plies": 40,
+    "spread_length": 18.5,
+    "splice_policy": "ALLOW_WITH_REVIEW",
+    "end_allowance": 0.15,
+    "defects_per_lay": 2,
+    "machine_width": 1.6,
+    "cut_table_width": 2.0,
+    "lay_height_limit": 80,
+    "shift": "SHIFT-A",
+    "review_threshold": 8
+  },
+  "units": {
+    "gsm": "g/m²",
+    "fabric_price": "LKR/kg",
+    "spread_length": "m",
+    "end_allowance": "m",
+    "machine_width": "m",
+    "cut_table_width": "m",
+    "lay_height_limit": "mm",
+    "review_threshold": "%"
+  }
+}

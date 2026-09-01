@@ -1,0 +1,38 @@
+{
+  "run_id": "RUN-C2-0001",
+  "official_marker_id": "MRK-00042",
+  "input_mode": "DEMO_SAMPLE",
+  "output_mode": "DEMO_PRECOMPUTED",
+  "data_classification": "SYNTHETIC_DEMONSTRATION",
+  "used_for_prediction": false,
+  "cad": {
+    "draft_marker_id": "DRAFT-MRK-001",
+    "marker_file_name": "marker_demo.dxf",
+    "cad_version": "CAD-V2024",
+    "marker_width": 1.55,
+    "marker_length": 12.5,
+    "pattern_piece_count": 16,
+    "total_piece_area": 15.8,
+    "grain_rule": "STRICT",
+    "nap_rule": "ONE_WAY",
+    "rotation_allowance": 0,
+    "spacing": 0.5,
+    "compactness": "HIGH",
+    "marker_efficiency": 82.0,
+    "parser_status": "DEMO_FIXTURE_LOADED",
+    "constraint_warning": "NONE",
+    "pattern_piece_summary": [
+      { "part_name": "Front Panel", "size": "M", "quantity": 4, "area": 7.2 },
+      { "part_name": "Back Panel", "size": "M", "quantity": 4, "area": 5.8 },
+      { "part_name": "Sleeve", "size": "M", "quantity": 8, "area": 2.8 }
+    ]
+  },
+  "units": {
+    "marker_width": "m",
+    "marker_length": "m",
+    "total_piece_area": "m²",
+    "rotation_allowance": "°",
+    "spacing": "cm",
+    "marker_efficiency": "%"
+  }
+}
