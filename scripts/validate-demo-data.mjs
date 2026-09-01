@@ -124,6 +124,9 @@ data['shared/machines.json'].forEach((m, i) => {
   validateId(m.machine_id, patterns.machine, `machines[${i}]`);
   if (!knownFactories.has(m.factory_id)) error(`Invalid factory_id ${m.factory_id} in machines[${i}]`);
   if (!knownLines.has(m.line_id)) error(`Invalid line_id ${m.line_id} in machines[${i}]`);
+  if (!m.machine_type || typeof m.machine_type !== 'string' || m.machine_type.trim() === '') {
+    error(`Missing or empty machine_type in machines[${i}]`);
+  }
 });
 
 const knownInspections = new Set((data['c1/inspections.json'] || []).map(i => i.inspection_id));

@@ -12,5 +12,19 @@
     "mtbf_days": 41,
     "mttr_hours": 3.8,
     "repeat_fault_count_90d": 2
+  },
+  {
+    "machine_id": "MAC-0043",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "history_days": 312,
+    "time_since_last_failure_days": 184,
+    "time_since_last_pm_days": 14,
+    "failures_30d": 0,
+    "failures_90d": 1,
+    "downtime_30d_hours": 0.0,
+    "mtbf_days": 156,
+    "mttr_hours": 2.5,
+    "repeat_fault_count_90d": 0
   }
 ]
