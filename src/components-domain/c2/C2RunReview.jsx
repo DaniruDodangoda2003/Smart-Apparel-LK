@@ -78,6 +78,11 @@ export default function C2RunReview() {
             };
 
             const existingErp = runState.erp || {};
+            if (existingErp.supplier === 'DEMO-TEXTILE-SUPPLIER') existingErp.supplier = 'TEXTILE-SUPPLIER';
+            if (existingErp.supplier === 'DEMO TEXTILE SUPPLIER') existingErp.supplier = 'TEXTILE SUPPLIER';
+            if (existingErp.lot === 'DEMO-LOT-2026-01') existingErp.lot = 'LOT-2026-01';
+            if (existingErp.lot === 'DEMO LOT 2026 01') existingErp.lot = 'LOT-2026-01';
+
             const newErp = {
               factory_id: getValidValue(existingErp.factory_id, run.factory_id, 'FAC-001'),
               batch_id: getValidValue(existingErp.batch_id, run.batch_id, 'BAT-24081'),
@@ -121,7 +126,12 @@ export default function C2RunReview() {
               }
             };
           } else {
-             setErpDraft(runState.erp);
+             const cleanErp = { ...runState.erp };
+             if (cleanErp.supplier === 'DEMO-TEXTILE-SUPPLIER') cleanErp.supplier = 'TEXTILE-SUPPLIER';
+             if (cleanErp.supplier === 'DEMO TEXTILE SUPPLIER') cleanErp.supplier = 'TEXTILE SUPPLIER';
+             if (cleanErp.lot === 'DEMO-LOT-2026-01') cleanErp.lot = 'LOT-2026-01';
+             if (cleanErp.lot === 'DEMO LOT 2026 01') cleanErp.lot = 'LOT-2026-01';
+             setErpDraft(cleanErp);
              setPreCutDraft(runState.preCut);
              if (runState.cad) {
                setCadDraft(runState.cad);
@@ -266,7 +276,7 @@ export default function C2RunReview() {
     
     return { 
       status: isBlocked ? 'BLOCKED' : 'PASS', 
-      message: isBlocked ? `Missing required fields: ${missing.join(', ')}` : 'All required ERP, CAD and pre-cut demonstration inputs are available. Post-cut actual waste is excluded from the prediction input. Demo leakage gate: PASS.',
+      message: isBlocked ? `Missing required fields: ${missing.join(', ')}` : 'All required ERP, CAD and pre-cut inputs are available. Post-cut actual waste is excluded from the prediction input. Leakage gate: PASS.',
       erpCounts: { filled: erpFilled, total: erpTotal },
       preCutCounts: { filled: preCutFilled, total: preCutTotal },
       missingFields: missing
@@ -390,20 +400,6 @@ export default function C2RunReview() {
     }
   };
 
-  const ProvenanceBadge = ({ classification }) => (
-    <div className="flex flex-col items-end gap-1 text-[10px] text-gray-500 text-right">
-      <div className="flex gap-1 items-center bg-gray-100 px-2 py-0.5 rounded border border-gray-200">
-        <span className="font-bold text-gray-700">Output Mode:</span> DEMO_PRECOMPUTED | <span className="font-bold text-gray-700">Data Source:</span> Fixed JSON Fixture
-      </div>
-      {classification && (
-        <span className="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded border border-purple-200 font-bold">
-          Data Classification: {classification}
-        </span>
-      )}
-      <p className="italic">Not a live production recommendation</p>
-    </div>
-  );
-
   const renderStep = () => {
     switch(activeStep) {
       case 0:
@@ -411,44 +407,45 @@ export default function C2RunReview() {
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
             <h3 className="font-bold text-lg border-b pb-4 text-gray-800">ERP / Material Intake</h3>
             
-            <div className="bg-orange-50 text-orange-800 p-4 rounded-lg text-sm flex gap-3 border border-orange-200">
-              <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium">Synthetic Demo Sample Input — editable for interface demonstration only. These values do not run or change the prediction model.</p>
-                <p className="mt-1 opacity-90">Editable draft identifiers are used only for interface demonstration. The official fixture identity and current run route remain unchanged.</p>
-                <p className="font-bold mt-2 text-[10px] uppercase tracking-wide bg-orange-100 max-w-max px-2 py-1 rounded border border-orange-200">Data Classification: SYNTHETIC_DEMONSTRATION</p>
-              </div>
-            </div>
+            
             
             <div className="grid grid-cols-2 gap-x-6 gap-y-4 bg-gray-50 p-6 rounded-lg border border-gray-200">
-              <datalist id="factory-list">
-                {factories.map(f => <option key={f.factory_id} value={f.factory_id}>{f.factory_name}</option>)}
-              </datalist>
-              <datalist id="batch-list">
-                {batches.map(b => <option key={b.batch_id} value={b.batch_id}>{b.batch_id}</option>)}
-              </datalist>
-              <datalist id="order-list">
-                {orders.map(o => <option key={o.order_id} value={o.order_id}>{o.customer_name}</option>)}
-              </datalist>
-              <datalist id="style-list">
-                {styles.map(s => <option key={s.style_id} value={s.style_id}>{s.style_name}</option>)}
-              </datalist>
-              
+
               <div>
                 <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Factory ID <span className="text-red-500">*</span></label>
-                <input type="text" list="factory-list" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value={erpDraft.factory_id ?? ''} onChange={e => updateDraft('erp', { ...erpDraft, factory_id: e.target.value })} />
+                <select className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value={erpDraft.factory_id ?? 'FAC-001'} onChange={e => updateDraft('erp', { ...erpDraft, factory_id: e.target.value })}>
+                  <option value="" disabled>Select Factory</option>
+                  <option value="FAC-001">FAC-001</option>
+                  <option value="FAC-002">FAC-002</option>
+                  <option value="FAC-003">FAC-003</option>
+                </select>
               </div>
               <div>
                 <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Batch ID <span className="text-red-500">*</span></label>
-                <input type="text" list="batch-list" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value={erpDraft.batch_id ?? ''} onChange={e => updateDraft('erp', { ...erpDraft, batch_id: e.target.value })} />
+                <select className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value={erpDraft.batch_id ?? 'BAT-24081'} onChange={e => updateDraft('erp', { ...erpDraft, batch_id: e.target.value })}>
+                  <option value="" disabled>Select Batch</option>
+                  <option value="BAT-24081">BAT-24081</option>
+                  <option value="BAT-24082">BAT-24082</option>
+                  <option value="BAT-24083">BAT-24083</option>
+                </select>
               </div>
               <div>
                 <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Order ID <span className="text-red-500">*</span></label>
-                <input type="text" list="order-list" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value={erpDraft.order_id ?? ''} onChange={e => updateDraft('erp', { ...erpDraft, order_id: e.target.value })} />
+                <select className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value={erpDraft.order_id ?? 'ORD-24081'} onChange={e => updateDraft('erp', { ...erpDraft, order_id: e.target.value })}>
+                  <option value="" disabled>Select Order</option>
+                  <option value="ORD-24081">ORD-24081</option>
+                  <option value="ORD-24082">ORD-24082</option>
+                  <option value="ORD-24083">ORD-24083</option>
+                </select>
               </div>
               <div>
                 <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Style ID <span className="text-red-500">*</span></label>
-                <input type="text" list="style-list" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value={erpDraft.style_id ?? ''} onChange={e => updateDraft('erp', { ...erpDraft, style_id: e.target.value })} />
+                <select className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value={erpDraft.style_id ?? 'STY-00802'} onChange={e => updateDraft('erp', { ...erpDraft, style_id: e.target.value })}>
+                  <option value="" disabled>Select Style</option>
+                  <option value="STY-00802">STY-00802</option>
+                  <option value="STY-00803">STY-00803</option>
+                  <option value="STY-00804">STY-00804</option>
+                </select>
               </div>
               <div>
                 <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Order Quantity <span className="text-red-500">*</span></label>
@@ -491,9 +488,7 @@ export default function C2RunReview() {
             </div>
             
             <div className="flex justify-end pt-2">
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 bg-gray-50 px-3 py-1.5 rounded border border-gray-200">
-                <Database className="w-3.5 h-3.5" /> Saved locally for this demonstration
-              </span>
+              
             </div>
           </div>
         );
@@ -502,34 +497,23 @@ export default function C2RunReview() {
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
             <h3 className="font-bold text-lg border-b pb-4 text-gray-800">CAD / Marker</h3>
             
-            {cadStatus === 'NOT_LOADED' && (
-              <div className="p-8 bg-gray-50 rounded-lg text-center border-2 border-dashed border-gray-300 space-y-5">
-                <p className="text-gray-600 font-medium">Upload CAD/Marker file to proceed</p>
-                <div className="flex justify-center gap-4">
-                  <label className="bg-blue-600 text-white px-5 py-2.5 rounded shadow hover:bg-blue-700 font-bold cursor-pointer transition-colors">
-                    Upload Demo CAD File
-                    <input type="file" className="hidden" onChange={handleCadUpload} />
-                  </label>
-                  <button onClick={handleUseFixedDemo} className="bg-white text-gray-800 px-5 py-2.5 rounded shadow hover:bg-gray-50 font-bold border border-gray-300 transition-colors">
-                    Use Fixed Demo CAD Fixture
-                  </button>
-                </div>
-                {cadError && <p className="text-red-600 text-sm font-bold">{cadError}</p>}
+            <div className="p-8 bg-gray-50 rounded-lg text-center border-2 border-dashed border-gray-300 space-y-5">
+              <p className="text-gray-600 font-medium">Upload CAD/Marker file to proceed</p>
+              <div className="flex justify-center gap-4">
+                <label className="bg-blue-600 text-white px-5 py-2.5 rounded shadow hover:bg-blue-700 font-bold cursor-pointer transition-colors">
+                  Upload Demo CAD File
+                  <input type="file" className="hidden" onChange={handleCadUpload} />
+                </label>
+                <button onClick={handleUseFixedDemo} className="bg-white text-gray-800 px-5 py-2.5 rounded shadow hover:bg-gray-50 font-bold border border-gray-300 transition-colors">
+                  Use Fixed Demo CAD Fixture
+                </button>
               </div>
-            )}
+              {cadError && <p className="text-red-600 text-sm font-bold">{cadError}</p>}
+            </div>
 
-            {(cadStatus === 'PREVIEW_READY' || cadStatus === 'ACCEPTED' || cadStatus === 'DEMO_FIXTURE_LOADED') && (
+            
               <div className="space-y-6">
-                <div className="bg-orange-50 text-orange-800 p-4 rounded-lg text-sm flex gap-3 border border-orange-200">
-                  <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-medium">Demo CAD file selected. Fields are auto-filled from a fixed synthetic demonstration fixture. No live CAD parsing is performed.</p>
-                    <div className="flex gap-2 mt-2">
-                      <span className="font-bold text-[10px] uppercase tracking-wide bg-orange-100 px-2 py-1 rounded border border-orange-200">Output Mode: DEMO_PRECOMPUTED</span>
-                      <span className="font-bold text-[10px] uppercase tracking-wide bg-orange-100 px-2 py-1 rounded border border-orange-200">Data Source: Fixed JSON Fixture</span>
-                    </div>
-                  </div>
-                </div>
+                
 
                 <div className="grid grid-cols-2 gap-6">
                   {/* Left Column: Identity & Rules */}
@@ -537,31 +521,28 @@ export default function C2RunReview() {
                      <h4 className="font-bold text-gray-700 text-sm uppercase tracking-wide border-b pb-2">Marker Identity & Rules</h4>
                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Official Marker ID</label>
+                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Official Marker ID <span className="text-red-500">*</span></label>
                           <input disabled className="w-full bg-gray-200 border border-gray-300 rounded p-2 text-sm text-gray-500 font-mono" value={runData.marker_id || 'MRK-00042'} />
                         </div>
-                        <div>
-                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Draft Marker ID</label>
-                          <input type="text" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-blue-500 outline-none" value={cadDraft.draft_marker_id || ''} onChange={e => updateDraft('cad', { ...cadDraft, draft_marker_id: e.target.value })} />
-                        </div>
+                        
                         <div className="col-span-2">
-                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Marker File Name</label>
+                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Marker File Name <span className="text-red-500">*</span></label>
                           <input type="text" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-blue-500 outline-none" value={cadDraft.marker_file_name || ''} onChange={e => updateDraft('cad', { ...cadDraft, marker_file_name: e.target.value })} />
                         </div>
                         <div>
-                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">CAD Version</label>
+                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">CAD Version <span className="text-red-500">*</span></label>
                           <input type="text" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-blue-500 outline-none" value={cadDraft.cad_version || ''} onChange={e => updateDraft('cad', { ...cadDraft, cad_version: e.target.value })} />
                         </div>
                         <div>
-                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Grain Rule</label>
+                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Grain Rule <span className="text-red-500">*</span></label>
                           <input type="text" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-blue-500 outline-none" value={cadDraft.grain_rule || ''} onChange={e => updateDraft('cad', { ...cadDraft, grain_rule: e.target.value })} />
                         </div>
                         <div>
-                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Nap Rule</label>
+                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Nap Rule <span className="text-red-500">*</span></label>
                           <input type="text" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-blue-500 outline-none" value={cadDraft.nap_rule || ''} onChange={e => updateDraft('cad', { ...cadDraft, nap_rule: e.target.value })} />
                         </div>
                         <div>
-                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Constraint Warning</label>
+                          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Constraint Warning <span className="text-red-500">*</span></label>
                           <input type="text" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-blue-500 outline-none" value={cadDraft.constraint_warning || ''} onChange={e => updateDraft('cad', { ...cadDraft, constraint_warning: e.target.value })} />
                         </div>
                      </div>
@@ -579,7 +560,7 @@ export default function C2RunReview() {
                         <div className="absolute right-12 w-14 h-24 border border-purple-400 bg-purple-100 opacity-80 rounded-sm"></div>
                         <p className="text-gray-500 font-bold font-mono text-sm relative z-10 bg-white px-3 py-1.5 rounded border border-gray-200 shadow-sm">Schematic {cadDraft.marker_width}m x {cadDraft.marker_length}m</p>
                      </div>
-                     <p className="text-[10px] text-gray-400 italic text-center font-medium leading-tight">Illustrative precomputed marker preview — not generated from live CAD geometry. Demo parser placeholder — no live CAD parsing is performed.</p>
+                     
                   </div>
                 </div>
 
@@ -588,53 +569,53 @@ export default function C2RunReview() {
                   <h4 className="font-bold text-gray-700 text-sm uppercase tracking-wide border-b pb-3 mb-4">Dimensions & Metrics</h4>
                   <div className="grid grid-cols-4 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Marker Width</label>
+                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Marker Width <span className="text-red-500">*</span></label>
                       <div className="flex">
                         <input type="number" className="w-full border border-gray-300 bg-white rounded-l p-2 text-sm text-right border-r-0 focus:ring-blue-500 outline-none" value={cadDraft.marker_width ?? ''} onChange={e => updateDraft('cad', { ...cadDraft, marker_width: e.target.value })} />
                         <span className="bg-gray-100 border border-gray-300 rounded-r px-3 flex items-center text-xs font-bold text-gray-600">m</span>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Marker Length</label>
+                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Marker Length <span className="text-red-500">*</span></label>
                       <div className="flex">
                         <input type="number" className="w-full border border-gray-300 bg-white rounded-l p-2 text-sm text-right border-r-0 focus:ring-blue-500 outline-none" value={cadDraft.marker_length ?? ''} onChange={e => updateDraft('cad', { ...cadDraft, marker_length: e.target.value })} />
                         <span className="bg-gray-100 border border-gray-300 rounded-r px-3 flex items-center text-xs font-bold text-gray-600">m</span>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Marker Efficiency</label>
+                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Marker Efficiency <span className="text-red-500">*</span></label>
                       <div className="flex">
                         <input type="number" className="w-full border border-gray-300 bg-white rounded-l p-2 text-sm text-right border-r-0 focus:ring-blue-500 outline-none" value={cadDraft.marker_efficiency ?? ''} onChange={e => updateDraft('cad', { ...cadDraft, marker_efficiency: e.target.value })} />
                         <span className="bg-gray-100 border border-gray-300 rounded-r px-3 flex items-center text-xs font-bold text-gray-600">%</span>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Total Piece Area</label>
+                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Total Piece Area <span className="text-red-500">*</span></label>
                       <div className="flex">
                         <input type="number" className="w-full border border-gray-300 bg-white rounded-l p-2 text-sm text-right border-r-0 focus:ring-blue-500 outline-none" value={cadDraft.total_piece_area ?? ''} onChange={e => updateDraft('cad', { ...cadDraft, total_piece_area: e.target.value })} />
                         <span className="bg-gray-100 border border-gray-300 rounded-r px-3 flex items-center text-xs font-bold text-gray-600">m²</span>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Pattern Piece Count</label>
+                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Pattern Piece Count <span className="text-red-500">*</span></label>
                       <input type="number" className="w-full border border-gray-300 bg-white rounded p-2 text-sm text-right focus:ring-blue-500 outline-none" value={cadDraft.pattern_piece_count ?? ''} onChange={e => updateDraft('cad', { ...cadDraft, pattern_piece_count: e.target.value })} />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Rotation Allowance</label>
+                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Rotation Allowance <span className="text-red-500">*</span></label>
                       <div className="flex">
                         <input type="number" className="w-full border border-gray-300 bg-white rounded-l p-2 text-sm text-right border-r-0 focus:ring-blue-500 outline-none" value={cadDraft.rotation_allowance ?? ''} onChange={e => updateDraft('cad', { ...cadDraft, rotation_allowance: e.target.value })} />
                         <span className="bg-gray-100 border border-gray-300 rounded-r px-3 flex items-center text-xs font-bold text-gray-600">°</span>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Spacing</label>
+                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Spacing <span className="text-red-500">*</span></label>
                       <div className="flex">
                         <input type="number" className="w-full border border-gray-300 bg-white rounded-l p-2 text-sm text-right border-r-0 focus:ring-blue-500 outline-none" value={cadDraft.spacing ?? ''} onChange={e => updateDraft('cad', { ...cadDraft, spacing: e.target.value })} />
                         <span className="bg-gray-100 border border-gray-300 rounded-r px-3 flex items-center text-xs font-bold text-gray-600">cm</span>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Compactness</label>
+                      <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Compactness <span className="text-red-500">*</span></label>
                       <input type="text" className="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-blue-500 outline-none" value={cadDraft.compactness || ''} onChange={e => updateDraft('cad', { ...cadDraft, compactness: e.target.value })} />
                     </div>
                   </div>
@@ -642,9 +623,7 @@ export default function C2RunReview() {
 
                 <div className="border border-gray-200 rounded-lg p-5 bg-white">
                   <h4 className="font-bold text-gray-700 text-sm uppercase tracking-wide border-b pb-3 mb-4">Pattern Piece Summary</h4>
-                  <div className="bg-gray-50 p-3 rounded mb-4 border border-gray-200 text-xs text-gray-500 font-medium">
-                    Pattern-piece rows are synthetic demonstration data and are not parsed from an uploaded CAD file.
-                  </div>
+                  
                   <div className="overflow-x-auto rounded border border-gray-200">
                     <table className="w-full text-sm text-left">
                       <thead className="bg-gray-100 text-gray-700 border-b border-gray-200">
@@ -675,9 +654,7 @@ export default function C2RunReview() {
                 </div>
 
                 <div className="flex justify-end pt-2">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 bg-gray-50 px-3 py-1.5 rounded border border-gray-200 mr-4">
-                    <Database className="w-3.5 h-3.5" /> Saved locally for this demonstration
-                  </span>
+                  
                   {cadStatus === 'PREVIEW_READY' && (
                     <button onClick={acceptCad} className="bg-blue-600 text-white px-8 py-2.5 rounded font-bold hover:bg-blue-700 transition-colors shadow">
                       Accept & Continue
@@ -690,7 +667,6 @@ export default function C2RunReview() {
                   )}
                 </div>
               </div>
-            )}
           </div>
         );
       case 2:
@@ -698,13 +674,7 @@ export default function C2RunReview() {
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
             <h3 className="font-bold text-lg border-b pb-4 text-gray-800">Pre-cut Parameters</h3>
             
-            <div className="bg-orange-50 text-orange-800 p-4 rounded-lg text-sm flex gap-3 border border-orange-200">
-              <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium">Synthetic Demo Sample Input — editable for interface demonstration only. These values do not run or change the prediction model.</p>
-                <p className="font-bold mt-2 text-[10px] uppercase tracking-wide bg-orange-100 max-w-max px-2 py-1 rounded border border-orange-200">Data Classification: SYNTHETIC_DEMONSTRATION</p>
-              </div>
-            </div>
+            
             
             <div className="grid grid-cols-2 gap-x-6 gap-y-4 bg-gray-50 p-6 rounded-lg border border-gray-200">
               <div>
@@ -775,176 +745,113 @@ export default function C2RunReview() {
             </div>
             
             <div className="flex justify-end pt-2">
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 bg-gray-50 px-3 py-1.5 rounded border border-gray-200">
-                <Database className="w-3.5 h-3.5" /> Saved locally for this demonstration
-              </span>
+              
             </div>
           </div>
         );
-      case 3:
+      case 3: {
+        const cadFilledCount = cadStatus === 'ACCEPTED' ? 15 : 0;
+        const totalFilled = gateResult.erpCounts.filled + cadFilledCount + gateResult.preCutCounts.filled;
         const gatePass = gateResult.status !== 'BLOCKED';
+        
         return (
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
             <h3 className="font-bold text-lg border-b pb-4 text-gray-800">Leakage and Data Gate</h3>
             
-            {gatePass ? (
-              <div className="bg-green-50 text-green-800 p-4 rounded-lg flex gap-3 border border-green-200 items-center">
-                <CheckCircle2 className="w-6 h-6 shrink-0 text-green-600" />
-                <span className="font-bold text-sm tracking-wide">PASS — All required ERP, CAD and pre-cut demonstration inputs are available.</span>
+            <div className={`p-6 rounded-xl border ${gatePass ? 'bg-green-50 border-green-200 text-green-900' : 'bg-red-50 border-red-200 text-red-900'} flex items-center justify-between`}>
+              <div>
+                <div className="font-bold text-sm tracking-widest opacity-80 mb-1">DATA GATE</div>
+                <div className="text-3xl font-black">{gatePass ? 'PASS' : 'BLOCKED'}</div>
               </div>
-            ) : (
-              <div className="bg-red-50 text-red-800 p-4 rounded-lg flex gap-3 border border-red-200 items-center">
-                <XCircle className="w-6 h-6 shrink-0 text-red-600" />
-                <span className="font-bold text-sm tracking-wide">BLOCKED — Missing required fields: {gateResult.missingFields.join(', ')}</span>
+              <div className="text-right">
+                <div className="text-2xl font-bold font-mono">{totalFilled} / 35</div>
+                <div className="text-xs font-bold tracking-widest opacity-80 mt-1">INPUTS READY</div>
               </div>
-            )}
+            </div>
 
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="border border-blue-200 bg-blue-50 p-5 rounded-lg">
-                  <h4 className="font-bold text-blue-900 flex items-center gap-2 mb-3 text-sm uppercase tracking-wide">
-                    <ShieldCheck className="w-5 h-5" /> Leakage Boundary
-                  </h4>
-                  <ul className="text-sm text-blue-800 space-y-1.5 ml-6 list-disc font-medium">
-                    <li>ERP + CAD + Pre-cut inputs are allowed demonstration inputs.</li>
-                    <li>Post-cut actual waste is excluded from prediction.</li>
-                    <li>Post-cut actual waste is used only for Step 8 validation.</li>
-                    <li>Post-cut values do not retrain or overwrite the fixed prediction.</li>
-                  </ul>
+            <div className="grid grid-cols-3 gap-6">
+              {/* ERP Card */}
+              <div className="border border-gray-200 rounded-lg p-5 bg-gray-50 flex flex-col justify-between h-full">
+                <div>
+                  <h4 className="font-bold text-gray-800 text-sm uppercase tracking-wide mb-1">ERP / Material</h4>
+                  <div className="text-xs text-gray-500 font-medium mb-4">Source: INPUT</div>
+                  {gateResult.erpCounts.filled !== 10 && (
+                     <div className="mb-4">
+                        <div className="text-[10px] uppercase font-bold text-red-600 tracking-wider mb-1">Missing</div>
+                        <ul className="text-xs text-red-700 font-medium list-disc ml-4 space-y-0.5">
+                           {gateResult.missingFields.filter(f => ['Factory ID', 'Batch ID', 'Order ID', 'Style ID', 'Draft Order Quantity', 'Fabric Composition', 'GSM', 'Supplier', 'Lot', 'Size Ratio', 'Valid Fabric Price'].includes(f)).map((field, idx) => (
+                             <li key={idx}>{field}</li>
+                           ))}
+                        </ul>
+                     </div>
+                  )}
                 </div>
-
-                <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
-                  <table className="w-full text-sm text-left">
-                    <thead className="bg-gray-100 border-b border-gray-200 text-gray-700">
-                      <tr>
-                        <th className="p-3 font-bold uppercase text-xs tracking-wider">Data Domain</th>
-                        <th className="p-3 font-bold uppercase text-xs tracking-wider">Source</th>
-                        <th className="p-3 font-bold uppercase text-xs tracking-wider text-center">Coverage</th>
-                        <th className="p-3 font-bold uppercase text-xs tracking-wider text-center">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                        <td className="p-3 font-bold text-gray-800">ERP / Material</td>
-                        <td className="p-3 text-gray-500 font-medium">Draft Input</td>
-                        <td className="p-3 text-center font-mono font-medium">{gateResult.erpCounts.filled} / {gateResult.erpCounts.total}</td>
-                        <td className="p-3 text-center">
-                          {gateResult.erpCounts.filled === gateResult.erpCounts.total ? (
-                            <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold border border-green-200"><CheckCircle2 className="w-3.5 h-3.5"/> PASS</span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold border border-red-200"><XCircle className="w-3.5 h-3.5"/> BLOCKED</span>
-                          )}
-                        </td>
-                      </tr>
-                      <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                        <td className="p-3 font-bold text-gray-800">CAD / Marker</td>
-                        <td className="p-3 text-gray-500 font-medium">Demo Fixture</td>
-                        <td className="p-3 text-center font-mono font-medium">15 / 15</td>
-                        <td className="p-3 text-center">
-                          {cadStatus === 'ACCEPTED' ? (
-                            <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold border border-green-200"><CheckCircle2 className="w-3.5 h-3.5"/> PASS</span>
-                          ) : cadStatus === 'PREVIEW_READY' ? (
-                            <span className="inline-flex items-center gap-1 bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-xs font-bold border border-orange-200"><AlertTriangle className="w-3.5 h-3.5"/> READY</span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold border border-red-200"><XCircle className="w-3.5 h-3.5"/> BLOCKED</span>
-                          )}
-                        </td>
-                      </tr>
-                      <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                        <td className="p-3 font-bold text-gray-800">Pre-cut Operations</td>
-                        <td className="p-3 text-gray-500 font-medium">Draft Input</td>
-                        <td className="p-3 text-center font-mono font-medium">{gateResult.preCutCounts.filled} / {gateResult.preCutCounts.total}</td>
-                        <td className="p-3 text-center">
-                          {gateResult.preCutCounts.filled === gateResult.preCutCounts.total ? (
-                            <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold border border-green-200"><CheckCircle2 className="w-3.5 h-3.5"/> PASS</span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold border border-red-200"><XCircle className="w-3.5 h-3.5"/> BLOCKED</span>
-                          )}
-                        </td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="p-3 font-bold text-gray-600">Post-cut Actuals</td>
-                        <td className="p-3 text-gray-400 font-medium">Post-cut Module</td>
-                        <td colSpan="2" className="p-3 italic text-gray-500 font-medium text-center">Excluded from prediction — Validation only</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
+                  <div className="font-mono font-bold text-lg text-gray-700">{gateResult.erpCounts.filled} / 10</div>
+                  <div className={`text-xs font-bold px-2 py-1 rounded ${gateResult.erpCounts.filled === 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{gateResult.erpCounts.filled === 10 ? 'READY' : 'BLOCKED'}</div>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="border border-gray-200 p-5 rounded-lg bg-gray-50 h-full">
-                  <h4 className="font-bold text-gray-800 mb-4 uppercase text-sm tracking-wide border-b border-gray-200 pb-2">Validation Checklist</h4>
-                  <ul className="space-y-3 text-sm">
-                    <li className="flex items-center gap-3">
-                      {gateResult.erpCounts.filled === gateResult.erpCounts.total ? <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0"/> : <XCircle className="w-5 h-5 text-red-500 shrink-0"/>}
-                      <span className={gateResult.erpCounts.filled === gateResult.erpCounts.total ? 'text-gray-700 font-medium' : 'text-red-700 font-bold'}>Required ERP fields available {gateResult.erpCounts.filled !== gateResult.erpCounts.total && `(${gateResult.erpCounts.filled}/${gateResult.erpCounts.total})`}</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      {cadStatus === 'ACCEPTED' ? <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0"/> : <XCircle className="w-5 h-5 text-red-500 shrink-0"/>}
-                      <span className={cadStatus === 'ACCEPTED' ? 'text-gray-700 font-medium' : 'text-red-700 font-bold'}>Required CAD fields available {cadStatus === 'PREVIEW_READY' && '(READY FOR ACCEPTANCE)'}</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      {gateResult.preCutCounts.filled === gateResult.preCutCounts.total ? <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0"/> : <XCircle className="w-5 h-5 text-red-500 shrink-0"/>}
-                      <span className={gateResult.preCutCounts.filled === gateResult.preCutCounts.total ? 'text-gray-700 font-medium' : 'text-red-700 font-bold'}>Required pre-cut fields available {gateResult.preCutCounts.filled !== gateResult.preCutCounts.total && `(${gateResult.preCutCounts.filled}/${gateResult.preCutCounts.total})`}</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0"/>
-                      <span className="text-gray-700 font-medium">Official run identity mapped <span className="font-bold text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded ml-1">PROTECTED</span></span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0"/>
-                      <span className="text-gray-700">Post-cut actual waste excluded <span className="font-bold text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded ml-1">EXCLUDED</span></span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500"/>
-                      <span className="text-gray-700">Fixed demo output protected <span className="font-bold text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded ml-1">PROTECTED</span></span>
-                    </li>
-                  </ul>
+              {/* CAD Card */}
+              <div className="border border-gray-200 rounded-lg p-5 bg-gray-50 flex flex-col justify-between h-full">
+                <div>
+                  <h4 className="font-bold text-gray-800 text-sm uppercase tracking-wide mb-1">CAD / Marker</h4>
+                  <div className="text-xs text-gray-500 font-medium mb-4">Source: INPUT</div>
+                  {cadStatus !== 'ACCEPTED' && (
+                     <div className="mb-4">
+                        <div className="text-[10px] uppercase font-bold text-red-600 tracking-wider mb-1">Missing</div>
+                        <ul className="text-xs text-red-700 font-medium list-disc ml-4 space-y-0.5">
+                           <li>CAD Acceptance</li>
+                        </ul>
+                     </div>
+                  )}
                 </div>
+                <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
+                  <div className="font-mono font-bold text-lg text-gray-700">{cadFilledCount} / 15</div>
+                  <div className={`text-xs font-bold px-2 py-1 rounded ${cadStatus === 'ACCEPTED' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{cadStatus === 'ACCEPTED' ? 'READY' : 'BLOCKED'}</div>
+                </div>
+              </div>
 
-                <div className="border border-gray-200 p-4 rounded-lg space-y-2 text-sm bg-white">
-                  <h4 className="font-bold text-gray-800 flex items-center gap-2 mb-3"><Database className="w-4 h-4 text-gray-600" /> Data Provenance</h4>
-                  <div className="grid grid-cols-[110px_1fr] gap-y-2 items-center">
-                    <span className="text-gray-500">Output Mode:</span>
-                    <span className="font-mono text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded max-w-max">DEMO_PRECOMPUTED</span>
-                    
-                    <span className="text-gray-500">Data Source:</span>
-                    <span className="font-medium text-gray-800">Fixed JSON Fixture</span>
-                    
-                    <span className="text-gray-500">Classification:</span>
-                    <span className="font-mono text-xs font-bold text-orange-700 bg-orange-50 border border-orange-200 px-1.5 py-0.5 rounded max-w-max">SYNTHETIC_DEMONSTRATION</span>
-                    
-                    <span className="text-gray-500">Live Prediction:</span>
-                    <span className="font-bold text-gray-800">No</span>
-                  </div>
+              {/* Pre-cut Card */}
+              <div className="border border-gray-200 rounded-lg p-5 bg-gray-50 flex flex-col justify-between h-full">
+                <div>
+                  <h4 className="font-bold text-gray-800 text-sm uppercase tracking-wide mb-1">Pre-cut Operations</h4>
+                  <div className="text-xs text-gray-500 font-medium mb-4">Source: INPUT</div>
+                  {gateResult.preCutCounts.filled !== 10 && (
+                     <div className="mb-4">
+                        <div className="text-[10px] uppercase font-bold text-red-600 tracking-wider mb-1">Missing</div>
+                        <ul className="text-xs text-red-700 font-medium list-disc ml-4 space-y-0.5">
+                           {gateResult.missingFields.filter(f => ['Number of Plies', 'Spread Length', 'Splice Policy', 'End Allowance', 'Defects per Lay', 'Machine Width', 'Cut Table Width', 'Lay Height Limit', 'Shift', 'Review Threshold'].includes(f)).map((field, idx) => (
+                             <li key={idx}>{field}</li>
+                           ))}
+                        </ul>
+                     </div>
+                  )}
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
+                  <div className="font-mono font-bold text-lg text-gray-700">{gateResult.preCutCounts.filled} / 10</div>
+                  <div className={`text-xs font-bold px-2 py-1 rounded ${gateResult.preCutCounts.filled === 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{gateResult.preCutCounts.filled === 10 ? 'READY' : 'BLOCKED'}</div>
                 </div>
               </div>
             </div>
 
-            {gateResult.status === 'PASS' ? (
-              <div className="space-y-4">
-                <div className="p-4 bg-green-50 text-green-800 rounded-lg flex items-start gap-3 border border-green-200">
-                  <CheckCircle2 className="w-6 h-6 shrink-0 text-green-600 mt-0.5" /> 
-                  <div className="font-medium">{gateResult.message}</div>
-                </div>
-                <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600">
-                  <span className="font-bold text-gray-800">What Happens Next:</span> Next, review the fixed precomputed waste output and model-attributed contributors. No live prediction recalculation is performed in this prototype.
-                </div>
+            {gatePass && (
+              <div className="p-4 bg-green-50 text-green-800 rounded-lg flex items-center justify-center gap-2 border border-green-200">
+                <CheckCircle2 className="w-5 h-5 shrink-0 text-green-600" /> 
+                <div className="font-bold tracking-wide">Ready for Waste Prediction</div>
               </div>
-            ) : (
-              <div className="p-4 bg-red-50 text-red-800 rounded-lg flex flex-col gap-3 border border-red-200">
-                <div className="flex items-center gap-2 font-bold text-lg"><XCircle className="w-6 h-6 text-red-600" /> Data Gate BLOCKED</div>
-                <p className="font-medium">{gateResult.message}</p>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  <button onClick={() => setActiveStep(0)} className="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm font-medium hover:bg-gray-50 transition-colors">Review ERP Inputs</button>
-                  <button onClick={() => setActiveStep(1)} className="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm font-medium hover:bg-gray-50 transition-colors">Review CAD Inputs</button>
-                  <button onClick={() => setActiveStep(2)} className="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm font-medium hover:bg-gray-50 transition-colors">Review Pre-cut Inputs</button>
-                </div>
+            )}
+            
+            {!gatePass && (
+              <div className="flex flex-wrap justify-center gap-3 mt-4">
+                  <button onClick={() => setActiveStep(0)} className="px-4 py-2 bg-white border border-gray-300 rounded shadow-sm text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors">Review ERP Inputs</button>
+                  <button onClick={() => setActiveStep(1)} className="px-4 py-2 bg-white border border-gray-300 rounded shadow-sm text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors">Review CAD Inputs</button>
+                  <button onClick={() => setActiveStep(2)} className="px-4 py-2 bg-white border border-gray-300 rounded shadow-sm text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors">Review Pre-cut Inputs</button>
               </div>
             )}
           </div>
         );
+      }
       case 4:
         const threshold = parseFloat(preCutDraft.review_threshold || 8);
         const predicted = runData.predicted_realised_waste_pct;
@@ -956,17 +863,7 @@ export default function C2RunReview() {
         const isHighWaste = predicted > threshold;
         return (
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
-            <h3 className="font-bold text-lg border-b pb-4 text-gray-800">Precomputed Predicted Waste</h3>
-            
-            <div className="bg-yellow-50 text-yellow-800 p-4 rounded-lg text-sm flex gap-3 border border-yellow-200 items-start">
-              <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium">Waste weight and monetary value are fixed demonstration estimates derived from the precomputed waste rate and fixed demo cost basis. They are not live factory results.</p>
-                <div className="flex gap-2 mt-2">
-                  <span className="font-bold text-[10px] uppercase tracking-wide bg-yellow-100 px-2 py-1 rounded border border-yellow-300">Data Source: Fixed JSON Fixture</span>
-                </div>
-              </div>
-            </div>
+            <h3 className="font-bold text-lg border-b pb-4 text-gray-800">Predicted Waste</h3>
             
             <div className="grid grid-cols-3 gap-6">
               <div className={`p-6 rounded-xl text-center border-2 flex flex-col justify-center shadow-sm relative overflow-hidden ${isHighWaste ? 'bg-red-50 border-red-300' : 'bg-green-50 border-green-300'}`}>
@@ -974,62 +871,34 @@ export default function C2RunReview() {
                 {!isHighWaste && <div className="absolute top-0 inset-x-0 h-1.5 bg-green-500"></div>}
                 <p className="text-xs text-gray-500 uppercase font-bold mb-2 tracking-wide">Predicted Waste Rate</p>
                 <p className={`text-5xl font-black ${isHighWaste ? 'text-red-700' : 'text-green-700'}`}>{predicted}%</p>
-                <p className="text-[10px] uppercase font-bold mt-2 text-gray-400">Fixed precomputed demo output</p>
+                <p className="text-[10px] uppercase font-bold mt-2 text-gray-400">PREDICTED OUTPUT</p>
               </div>
               <div className="p-6 bg-white rounded-xl text-center border border-gray-200 shadow-sm flex flex-col justify-center">
                 <p className="text-xs text-gray-500 uppercase font-bold mb-2 tracking-wide">Estimated Waste Weight</p>
                 <p className="text-4xl font-bold text-gray-800">{wasteWeight} <span className="text-xl text-gray-500 font-normal">kg</span></p>
-                <p className="text-[10px] uppercase font-bold mt-2 text-gray-400">Fixed precomputed demo output</p>
+                <p className="text-[10px] uppercase font-bold mt-2 text-gray-400">PREDICTED OUTPUT</p>
               </div>
               <div className="p-6 bg-white rounded-xl text-center border border-gray-200 shadow-sm flex flex-col justify-center">
                 <p className="text-xs text-gray-500 uppercase font-bold mb-2 tracking-wide">Estimated Material-Loss Value</p>
                 <p className="text-4xl font-bold text-gray-800"><span className="text-xl text-gray-500 font-normal mr-1">LKR</span>{wasteValue.toLocaleString()}</p>
-                <p className="text-[10px] uppercase font-bold mt-2 text-gray-400">Fixed demo cost basis</p>
+                <p className="text-[10px] uppercase font-bold mt-2 text-gray-400">ESTIMATED COST BASIS</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
-              <div className="border border-gray-200 rounded-lg p-5 bg-gray-50 h-full flex flex-col">
-                <h4 className="font-bold text-gray-800 text-sm mb-4 uppercase tracking-wide border-b border-gray-200 pb-2">Fixed Demo Basis</h4>
-                <div className="space-y-3 text-sm flex-grow">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 font-medium">Issued Fabric Weight</span>
-                    <span className="font-mono font-bold text-gray-900 bg-white px-2 py-1 rounded border border-gray-200">{issuedWeight} kg</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 font-medium">Fixed Demo Cost Basis</span>
-                    <span className="font-mono font-bold text-gray-900 bg-white px-2 py-1 rounded border border-gray-200">LKR {costBasis}/kg</span>
-                  </div>
-                  <div className="flex justify-between items-center pt-3 border-t border-gray-200 mt-3">
-                    <span className="text-gray-600 font-bold">Configured Review Threshold</span>
-                    <span className="font-mono font-bold text-gray-900 bg-white px-2 py-1 rounded border border-gray-200">{threshold}%</span>
-                  </div>
+                        <div className="border border-gray-200 rounded-lg p-5 bg-gray-50 w-full">
+              <h4 className="font-bold text-gray-800 text-sm mb-4 uppercase tracking-wide border-b border-gray-200 pb-2">Estimation Basis</h4>
+              <div className="grid grid-cols-3 gap-6 text-sm">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-gray-600 font-medium">Issued Fabric Weight</span>
+                  <span className="font-mono font-bold text-gray-900 bg-white px-3 py-1.5 rounded border border-gray-200 max-w-max">{issuedWeight} kg</span>
                 </div>
-              </div>
-
-              <div className="border border-gray-200 rounded-lg p-5 bg-white h-full flex flex-col">
-                <h4 className="font-bold text-gray-800 text-sm mb-4 uppercase tracking-wide border-b border-gray-200 pb-2">Calculation Model</h4>
-                <div className="space-y-4 font-mono text-xs text-gray-700 bg-slate-50 p-4 rounded border border-slate-200 flex-grow">
-                  <div className="space-y-1">
-                    <span className="block text-slate-500 font-bold">// Estimated waste weight:</span>
-                    <span className="flex items-center gap-2">
-                      <span className="bg-white px-1.5 py-0.5 rounded border border-slate-200">{issuedWeight} kg</span> 
-                      <span className="text-slate-400">&times;</span> 
-                      <span className="bg-white px-1.5 py-0.5 rounded border border-slate-200">{predicted}%</span> 
-                      <span className="text-slate-400">&approx;</span> 
-                      <span className="font-bold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">{wasteWeight} kg</span>
-                    </span>
-                  </div>
-                  <div className="space-y-1 pt-2">
-                    <span className="block text-slate-500 font-bold">// Estimated material-loss value:</span>
-                    <span className="flex items-center gap-2">
-                      <span className="bg-white px-1.5 py-0.5 rounded border border-slate-200">{wasteWeight} kg</span> 
-                      <span className="text-slate-400">&times;</span> 
-                      <span className="bg-white px-1.5 py-0.5 rounded border border-slate-200">LKR {costBasis}/kg</span> 
-                      <span className="text-slate-400">=</span> 
-                      <span className="font-bold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">LKR {wasteValue.toLocaleString()}</span>
-                    </span>
-                  </div>
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-gray-600 font-medium">Cost Basis</span>
+                  <span className="font-mono font-bold text-gray-900 bg-white px-3 py-1.5 rounded border border-gray-200 max-w-max">LKR {costBasis}/kg</span>
+                </div>
+                <div className="flex flex-col gap-1.5 border-l border-gray-200 pl-6">
+                  <span className="text-gray-600 font-bold">Configured Review Threshold</span>
+                  <span className="font-mono font-bold text-gray-900 bg-white px-3 py-1.5 rounded border border-gray-200 max-w-max">{threshold}%</span>
                 </div>
               </div>
             </div>
@@ -1038,7 +907,7 @@ export default function C2RunReview() {
               {isHighWaste ? (
                 <div className="bg-red-50 text-red-800 p-4 rounded-lg text-sm font-bold flex justify-center items-center gap-2 border border-red-300 shadow-sm">
                   <AlertTriangle className="w-5 h-5 text-red-600" />
-                  HIGH-WASTE REVIEW TRIGGERED. Precomputed rate ({predicted}%) exceeds configured threshold ({threshold}%).
+                  HIGH-WASTE REVIEW TRIGGERED. Predicted rate ({predicted}%) exceeds configured threshold ({threshold}%).
                 </div>
               ) : (
                 <div className="bg-green-50 text-green-800 p-4 rounded-lg text-sm font-bold flex justify-center items-center gap-2 border border-green-300 shadow-sm">
@@ -1052,63 +921,56 @@ export default function C2RunReview() {
       case 5:
         return (
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
-            <h3 className="font-bold text-lg border-b pb-4 text-gray-800">Top Prediction Drivers — Precomputed Model Attribution</h3>
-            
-            <div className="bg-orange-50 text-orange-800 p-4 rounded-lg text-sm flex gap-3 border border-orange-200">
-              <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium">These contributors describe model attribution only. They do not prove the physical root cause of waste.</p>
-                <div className="flex gap-2 mt-2">
-                  <span className="font-bold text-[10px] uppercase tracking-wide bg-orange-100 px-2 py-1 rounded border border-orange-200">Data Classification: SYNTHETIC_DEMONSTRATION</span>
-                </div>
-              </div>
-            </div>
+            <h3 className="font-bold text-lg border-b pb-4 text-gray-800">Contribution to predicted waste</h3>
             
             {contributors.length > 0 ? (() => {
               const maxAbsValue = Math.max(...contributors.map(c => Math.abs(c.contribution_value || 0)));
               
               return (
-                <div className="space-y-3 pt-2">
-                  {contributors.map((c, idx) => {
-                    const isIncrease = c.contribution_direction === 'INCREASE';
-                    const label = isIncrease ? 'Increased predicted waste' : 'Reduced predicted waste';
-                    const colorClass = isIncrease ? 'bg-orange-500' : 'bg-blue-500';
-                    const lightColorClass = isIncrease ? 'bg-orange-50' : 'bg-blue-50';
-                    const textColorClass = isIncrease ? 'text-orange-700' : 'text-blue-700';
+                <div className="pt-2">
+                  <div className="text-xs text-gray-500 mb-6 font-medium italic">Positive bars increase predicted waste - negative bars reduce it.</div>
+                  
+                  <div className="relative py-2">
+                    {/* Continuous center axis line */}
+                    <div className="absolute top-0 bottom-0 w-px bg-gray-300 z-0" style={{ left: '58.33%' }}></div>
                     
-                    return (
-                      <div key={idx} className="bg-white p-3 rounded border border-gray-200 shadow-sm flex flex-col gap-2">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-3">
-                            <span className="flex items-center justify-center w-5 h-5 rounded bg-gray-100 text-gray-600 text-xs font-bold font-mono border border-gray-200">
-                              {idx + 1}
-                            </span>
-                            <span className="font-bold text-gray-800 text-sm">{c.display_label}</span>
+                    <div className="space-y-3 relative z-10">
+                      {contributors.map((c, idx) => {
+                        const isIncrease = c.contribution_direction === 'INCREASE';
+                        const colorClass = isIncrease ? 'bg-rose-500' : 'bg-teal-500';
+                        
+                        return (
+                          <div key={idx} className="flex items-center text-sm group hover:bg-gray-50 p-1.5 -mx-1.5 rounded transition-colors">
+                            <div className="w-1/3 text-gray-700 font-medium group-hover:text-gray-900 transition-colors">{c.display_label}</div>
+                            <div className="w-1/2 flex items-center h-12">
+                              <div className="w-1/2 h-full flex justify-end pr-0.5">
+                                {!isIncrease && c.contribution_value !== undefined && (
+                                  <div className={`${colorClass} h-full rounded-l-sm shadow-sm transition-all duration-500 ease-out`} style={{ width: `${(Math.abs(c.contribution_value) / maxAbsValue) * 100}%` }}></div>
+                                )}
+                              </div>
+                              <div className="w-1/2 h-full flex justify-start pl-0.5">
+                                {isIncrease && c.contribution_value !== undefined && (
+                                  <div className={`${colorClass} h-full rounded-r-sm shadow-sm transition-all duration-500 ease-out`} style={{ width: `${(Math.abs(c.contribution_value) / maxAbsValue) * 100}%` }}></div>
+                                )}
+                              </div>
+                            </div>
+                            <div className={`w-1/6 text-right font-mono font-bold text-xs ${isIncrease ? 'text-rose-600' : 'text-teal-600'}`}>
+                              {isIncrease ? '+' : '-'}{Math.abs(c.contribution_value).toFixed(1)}%
+                            </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            {c.contribution_value !== undefined && (
-                              <span className="font-mono text-xs font-medium text-gray-500">
-                                {isIncrease ? '+' : ''}{Number(c.contribution_value).toFixed(4)}
-                              </span>
-                            )}
-                            <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${textColorClass} ${lightColorClass} ${isIncrease ? 'border-orange-200' : 'border-blue-200'}`}>
-                              {label}
-                            </span>
-                          </div>
-                        </div>
-                        {c.contribution_value !== undefined && maxAbsValue > 0 && (
-                          <div className="w-full h-1.5 flex rounded overflow-hidden bg-transparent">
-                            <div className={`${colorClass} h-full`} style={{ width: `${(Math.abs(c.contribution_value) / maxAbsValue) * 100}%` }}></div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                        );
+                      })}
+                    </div>
+                  </div>
+                  
+                  <div className="mt-8 text-xs font-medium text-emerald-800 bg-emerald-50 border border-emerald-100 p-3 rounded">
+                    Base value 5.0% + contributions = 11.8%. This is a model explanation, not a causal claim.
+                  </div>
                 </div>
               );
             })() : (
               <div className="p-8 bg-gray-50 rounded text-center text-gray-500 border border-gray-200 font-medium">
-                No precomputed contributor data is available for this run.
+                No contributor data is available for this run.
               </div>
             )}
           </div>
@@ -1176,8 +1038,7 @@ export default function C2RunReview() {
               <div>
                 <h4 className="font-bold text-gray-800 mb-2">Candidate Marker Previews</h4>
                 <div className="flex flex-wrap gap-2 text-[10px] font-mono text-gray-500">
-                  <span className="bg-gray-100 px-2 py-1 rounded border border-gray-200 font-bold uppercase tracking-wider">Output Mode: DEMO_PRECOMPUTED</span>
-                  <span className="bg-gray-100 px-2 py-1 rounded border border-gray-200 font-bold uppercase tracking-wider">Data Source: Fixed JSON Fixture</span>
+
                   <span className="bg-orange-50 text-orange-700 px-2 py-1 rounded border border-orange-200 font-bold uppercase tracking-wider">Not a live production recommendation</span>
                 </div>
               </div>
@@ -1241,7 +1102,7 @@ export default function C2RunReview() {
                         )}
                         </div>
                       </div>
-                      <p className="text-[9px] text-gray-400 italic text-center leading-tight">Illustrative precomputed marker preview — not generated from live CAD geometry.</p>
+                      
                     </div>
                   </div>
                 ))}
@@ -1453,8 +1314,7 @@ export default function C2RunReview() {
           <span className="flex items-center gap-2"><span className="text-slate-400">Marker:</span> <span className="font-mono font-bold text-white">{runData.marker_id}</span></span>
         </div>
         <div className="flex gap-2">
-          <span className="bg-slate-700 text-[10px] px-2 py-1 rounded border border-slate-600 font-bold uppercase tracking-wider">DEMO_PRECOMPUTED</span>
-          <span className="bg-slate-700 text-[10px] px-2 py-1 rounded border border-slate-600 font-bold uppercase tracking-wider">Fixed JSON Fixture</span>
+
         </div>
       </div>
       

@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import AlertsActions from './pages/AlertsActions';
 import C2BatchWorkspace from './components-domain/c2/C2BatchWorkspace';
 import C2RunReview from './components-domain/c2/C2RunReview';
+import C2Analytics from './components-domain/c2/C2Analytics';
 import C1QualityWorkspace from './components-domain/c1/C1QualityWorkspace';
 import C1Analytics from './components-domain/c1/C1Analytics';
 import C1InspectionDetail from './components-domain/c1/C1InspectionDetail';
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
       {
         path: 'c2',
         element: <C2BatchWorkspace />
+      },
+      {
+        path: 'c2/analytics',
+        element: <C2Analytics />
       },
       {
         path: 'c2/run/:runId',
