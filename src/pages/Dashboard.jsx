@@ -135,16 +135,19 @@ export default function Dashboard() {
 
         {/* C3 Card */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-full overflow-hidden">
-          <div className="p-5 border-b border-gray-100 flex items-center gap-3">
-            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Wrench className="w-5 h-5" /></div>
-            <h3 className="font-semibold text-slate-900">Pred. Maintenance</h3>
+          <div className="p-5 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Wrench className="w-5 h-5" /></div>
+              <h3 className="font-semibold text-slate-900">Pred. Maintenance</h3>
+            </div>
+            <span className="text-[10px] text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-200">Demo Data</span>
           </div>
           <div className="p-5 flex-1 grid grid-cols-2 gap-y-4 gap-x-2 text-sm">
-            <div><p className="text-gray-500">Machines</p><p className="font-semibold text-gray-900">{data.c3?.active_machines ?? 'N/A'}</p></div>
-            <div><p className="text-gray-500">Fixture Pending Actions</p><p className="font-semibold text-gray-900">{data.c3?.maintenance_actions_pending ?? 'N/A'}</p></div>
-            <div><p className="text-gray-500">High-Risk</p><p className="font-semibold text-red-600">{data.c3?.critical_risk_machines ?? 'N/A'}</p></div>
+            <div><p className="text-gray-500">Machines Monitored</p><p className="font-semibold text-gray-900">{data.c3?.active_machines ?? 'N/A'}</p></div>
+            <div><p className="text-gray-500">Pending Actions</p><p className="font-semibold text-gray-900">{data.c3?.maintenance_actions_pending ?? 'N/A'}</p></div>
+            <div><p className="text-gray-500">Critical Attention</p><p className="font-semibold text-red-600">{data.c3?.critical_risk_machines ?? 'N/A'}</p></div>
             <div><p className="text-gray-500">Warning</p><p className="font-semibold text-orange-600">{data.c3?.warning_risk_machines ?? 'N/A'}</p></div>
-            <div className="col-span-2 border-t pt-3 mt-1"><p className="text-gray-500">Local Open Maintenance Actions: <span className="font-semibold text-indigo-600">{data.c3?.local_open_maintenance_actions ?? 0}</span></p></div>
+            <div className="col-span-2 border-t pt-3 mt-1"><p className="text-gray-500">Open Maintenance Reviews: <span className="font-semibold text-indigo-600">{data.c3?.local_open_maintenance_actions ?? 0}</span></p></div>
           </div>
           <button onClick={() => navigate('/c3')} className="mt-auto w-full py-3 bg-gray-50 hover:bg-blue-50 text-blue-600 text-sm font-medium transition-colors flex items-center justify-center border-t border-gray-100">
             Open C3 <ArrowRight className="w-4 h-4 ml-1" />

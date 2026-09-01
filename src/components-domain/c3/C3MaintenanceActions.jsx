@@ -51,7 +51,7 @@ export default function C3MaintenanceActions() {
     <div className="space-y-6 max-w-7xl mx-auto">
       <div className="flex items-center gap-4">
         <button onClick={() => navigate('/c3')} className="text-gray-500 hover:text-gray-900"><ArrowLeft className="w-5 h-5" /></button>
-        <PageHeader title="Local Maintenance Actions" description="Manage locally created maintenance-review actions." />
+        <PageHeader title="Maintenance Review Actions" description="Manage locally created maintenance review actions." />
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -77,7 +77,7 @@ export default function C3MaintenanceActions() {
                     </div>
                   </td>
                   <td className="p-4 font-semibold text-gray-700">{action.entity_id}</td>
-                  <td className="p-4">{action.action_type}</td>
+                  <td className="p-4">{action.action_type === 'MAINTENANCE_REVIEW' ? 'Maintenance Review' : action.action_type}</td>
                   <td className="p-4">{getStatusBadge(action.status)}</td>
                   <td className="p-4 text-xs text-gray-500 space-y-1">
                     <div>Created: {formatDate(action.created_at)}</div>

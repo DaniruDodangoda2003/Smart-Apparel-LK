@@ -12,6 +12,18 @@
     "explanation": "Longer maintenance history and high availability of selected maintenance fields are available in this synthetic demo case."
   },
   {
+    "machine_id": "MAC-0043",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "history_days": 312,
+    "fault_field_availability": 0.86,
+    "repair_duration_availability": 0.81,
+    "downtime_availability": 0.88,
+    "pm_history_available": true,
+    "data_sufficiency_status": "GOOD",
+    "explanation": "Sufficient maintenance history and field availability support this low-risk demo prediction."
+  },
+  {
     "machine_id": "MAC-0045",
     "output_mode": "DEMO_PRECOMPUTED",
     "data_classification": "SYNTHETIC_DEMONSTRATION",

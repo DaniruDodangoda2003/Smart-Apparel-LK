@@ -33,5 +33,40 @@
         "display_text": "Lower mean time between failures increases risk."
       }
     ]
+  },
+  {
+    "machine_id": "MAC-0043",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "drivers": [
+      {
+        "feature": "failures_30d",
+        "feature_value": 0,
+        "shap_value": 0.28,
+        "direction": "DECREASES_RISK",
+        "display_text": "Lack of recent breakdowns decreased the model-attributed risk."
+      },
+      {
+        "feature": "time_since_last_pm_days",
+        "feature_value": 14,
+        "shap_value": 0.22,
+        "direction": "DECREASES_RISK",
+        "display_text": "Recent preventive maintenance decreases risk."
+      },
+      {
+        "feature": "mtbf_days",
+        "feature_value": 156,
+        "shap_value": 0.15,
+        "direction": "DECREASES_RISK",
+        "display_text": "High mean time between failures decreases risk."
+      },
+      {
+        "feature": "downtime_30d_hours",
+        "feature_value": 0.0,
+        "shap_value": 0.12,
+        "direction": "DECREASES_RISK",
+        "display_text": "Zero recent downtime hours contribute to reduced risk."
+      }
+    ]
   }
 ]
