@@ -1,0 +1,16 @@
+[
+  {
+    "machine_id": "MAC-0042",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "history_days": 548,
+    "time_since_last_failure_days": 12,
+    "time_since_last_pm_days": 64,
+    "failures_30d": 3,
+    "failures_90d": 5,
+    "downtime_30d_hours": 9.2,
+    "mtbf_days": 41,
+    "mttr_hours": 3.8,
+    "repeat_fault_count_90d": 2
+  }
+]

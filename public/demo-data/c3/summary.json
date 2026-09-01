@@ -1,0 +1,6 @@
+{
+  "active_machines": 9,
+  "critical_risk_machines": 1,
+  "warning_risk_machines": 2,
+  "maintenance_actions_pending": 3
+}

@@ -1,0 +1,6 @@
+[
+  { "order_id": "ORD-24081", "factory_id": "FAC-001", "status": "IN_PROGRESS", "quantity": 5000 },
+  { "order_id": "ORD-24082", "factory_id": "FAC-001", "status": "PENDING", "quantity": 12000 },
+  { "order_id": "ORD-24083", "factory_id": "FAC-001", "status": "COMPLETED", "quantity": 3000 },
+  { "order_id": "ORD-24084", "factory_id": "FAC-001", "status": "IN_PROGRESS", "quantity": 8500 }
+]

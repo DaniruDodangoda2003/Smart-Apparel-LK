@@ -1,0 +1,54 @@
+[
+  {
+    "alert_id": "ALT-C2-0001",
+    "component_id": "C2",
+    "factory_id": "FAC-001",
+    "entity_type": "batch",
+    "entity_id": "BAT-24081",
+    "severity": "HIGH",
+    "title": "High predicted cutting-room waste",
+    "message": "BAT-24081 exceeds the configured demo review threshold.",
+    "status": "OPEN",
+    "action_route": "/c2/run/RUN-C2-0001",
+    "dedupe_key": "C2:BAT-24081:HIGH_WASTE"
+  },
+  {
+    "alert_id": "ALT-C1-0001",
+    "component_id": "C1",
+    "factory_id": "FAC-001",
+    "entity_type": "roll",
+    "entity_id": "ROLL-00001",
+    "severity": "WARNING",
+    "title": "Fabric defect detected",
+    "message": "Multiple defects detected during inspection.",
+    "status": "OPEN",
+    "action_route": "/c1/inspect-video",
+    "dedupe_key": "C1:ROLL-00001:DEFECTS"
+  },
+  {
+    "alert_id": "ALT-C3-0001",
+    "component_id": "C3",
+    "factory_id": "FAC-001",
+    "entity_type": "machine",
+    "entity_id": "MAC-0042",
+    "severity": "CRITICAL",
+    "title": "High failure risk detected",
+    "message": "MAC-0042 requires immediate maintenance.",
+    "status": "ACKNOWLEDGED",
+    "action_route": "/c3/machine/MAC-0042",
+    "dedupe_key": "C3:MAC-0042:FAILURE_RISK"
+  },
+  {
+    "alert_id": "ALT-C4-0001",
+    "component_id": "C4",
+    "factory_id": "FAC-001",
+    "entity_type": "line",
+    "entity_id": "LINE-03",
+    "severity": "INFO",
+    "title": "Operator allocation suggestion",
+    "message": "LINE-03 is a bottleneck, suggest reallocating OP-006.",
+    "status": "OPEN",
+    "action_route": "/c4/allocation/LINE-03",
+    "dedupe_key": "C4:LINE-03:BOTTLENECK"
+  }
+]

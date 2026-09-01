@@ -1,0 +1,46 @@
+[
+  {
+    "contributor_id": "SHAP-C2-001",
+    "run_id": "RUN-C2-0001",
+    "feature": "marker_efficiency",
+    "display_label": "low marker efficiency",
+    "value": "82%",
+    "contribution_direction": "INCREASE",
+    "contribution_value": 2.4,
+    "interpretation": "Increased predicted waste",
+    "review_prompt": "Model-attributed contributor. Review this factor."
+  },
+  {
+    "contributor_id": "SHAP-C2-002",
+    "run_id": "RUN-C2-0001",
+    "feature": "splice_count",
+    "display_label": "high splice count",
+    "value": "12 splices",
+    "contribution_direction": "INCREASE",
+    "contribution_value": 1.1,
+    "interpretation": "Increased predicted waste",
+    "review_prompt": "Model-attributed contributor. Review this factor."
+  },
+  {
+    "contributor_id": "SHAP-C2-003",
+    "run_id": "RUN-C2-0001",
+    "feature": "pattern_complexity",
+    "display_label": "pattern geometry complexity",
+    "value": "High",
+    "contribution_direction": "INCREASE",
+    "contribution_value": 0.8,
+    "interpretation": "Increased predicted waste",
+    "review_prompt": "Model-attributed contributor. Review this factor."
+  },
+  {
+    "contributor_id": "SHAP-C2-004",
+    "run_id": "RUN-C2-0001",
+    "feature": "marker_compactness",
+    "display_label": "good marker compactness",
+    "value": "Optimal",
+    "contribution_direction": "DECREASE",
+    "contribution_value": -0.5,
+    "interpretation": "Reduced predicted waste",
+    "review_prompt": "Model-attributed contributor. Review this factor."
+  }
+]

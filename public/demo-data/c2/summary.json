@@ -1,0 +1,6 @@
+{
+  "high_waste_batch_count": 3,
+  "latest_predicted_waste": 11.8,
+  "strategy_status": "REVIEW_REQUIRED",
+  "validation_status": "PENDING"
+}

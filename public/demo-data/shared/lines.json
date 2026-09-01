@@ -1,0 +1,26 @@
+[
+  {
+    "line_id": "LINE-01",
+    "factory_id": "FAC-001",
+    "name": "Sewing Line 1",
+    "status": "ACTIVE"
+  },
+  {
+    "line_id": "LINE-02",
+    "factory_id": "FAC-001",
+    "name": "Sewing Line 2",
+    "status": "ACTIVE"
+  },
+  {
+    "line_id": "LINE-03",
+    "factory_id": "FAC-001",
+    "name": "Sewing Line 3",
+    "status": "ACTIVE"
+  },
+  {
+    "line_id": "LINE-04",
+    "factory_id": "FAC-001",
+    "name": "Sewing Line 4",
+    "status": "ACTIVE"
+  }
+]

@@ -1,0 +1,6 @@
+[
+  { "roll_id": "ROLL-00001", "batch_id": "BAT-24081", "supplier": "TextileCorp", "lot": "LOT-A1", "fabric": "100% Cotton", "status": "PENDING" },
+  { "roll_id": "ROLL-00002", "batch_id": "BAT-24081", "supplier": "TextileCorp", "lot": "LOT-A1", "fabric": "100% Cotton", "status": "INSPECTED" },
+  { "roll_id": "ROLL-00003", "batch_id": "BAT-24082", "supplier": "WeaveMasters", "lot": "LOT-B2", "fabric": "Poly-Blend", "status": "CUT" },
+  { "roll_id": "ROLL-00004", "batch_id": "BAT-24083", "supplier": "KnitWorks", "lot": "LOT-C3", "fabric": "Spandex", "status": "CUT" }
+]

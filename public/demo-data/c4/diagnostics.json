@@ -1,0 +1,23 @@
+[
+  {
+    "diagnostic_id": "C4-DIAG-0001",
+    "line_id": "LINE-03",
+    "contributors": [
+      {
+        "feature_key": "operator_skill_mismatch",
+        "display_label": "Skill Level vs Target Complexity",
+        "contribution_score": 0.85,
+        "direction": "DECREASES_MODEL_OUTPUT"
+      },
+      {
+        "feature_key": "operator_absence_count",
+        "display_label": "Unplanned Absence Coverage",
+        "contribution_score": 0.60,
+        "direction": "DECREASES_MODEL_OUTPUT"
+      }
+    ],
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "limitation": "Model attribution does not prove operational or employee-level causation."
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "factory_id": "FAC-001",
+    "name": "Primary Demo Factory",
+    "location": "Demo Location",
+    "status": "ACTIVE"
+  }
+]

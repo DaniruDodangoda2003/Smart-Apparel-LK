@@ -1,0 +1,9 @@
+[
+  {
+    "inspection_id": "INSP-0001",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "recommendation": "Defect Detected",
+    "details": "Model highlights anomalies consistent with oil stains."
+  }
+]

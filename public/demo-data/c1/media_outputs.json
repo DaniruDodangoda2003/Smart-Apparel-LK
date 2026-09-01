@@ -1,0 +1,9 @@
+[
+  {
+    "inspection_id": "INSP-0001",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "video_analysis_available": true,
+    "demo_notes": "Continuous defect signature observed between seconds 12 and 18."
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "machine_id": "MAC-0042",
+    "display_code": "SN-042",
+    "factory_id": "FAC-001",
+    "line_id": "LINE-03",
+    "risk_7d": 0.68,
+    "risk_14d": 0.78,
+    "risk_30d": 0.87,
+    "data_sufficiency": "GOOD",
+    "priority": "CRITICAL",
+    "output_mode": "DEMO_PRECOMPUTED"
+  },
+  {
+    "machine_id": "MAC-0043",
+    "display_code": "SN-043",
+    "factory_id": "FAC-001",
+    "line_id": "LINE-03",
+    "risk_7d": 0.12,
+    "risk_14d": 0.15,
+    "risk_30d": 0.20,
+    "data_sufficiency": "GOOD",
+    "priority": "LOW",
+    "output_mode": "DEMO_PRECOMPUTED"
+  }
+]

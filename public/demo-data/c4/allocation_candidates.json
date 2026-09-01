@@ -1,0 +1,30 @@
+[
+  {
+    "candidate_id": "C4-ALLOC-0001",
+    "line_id": "LINE-03",
+    "scenario_label": "Cross-train Support",
+    "operator_ids": ["OP-001", "OP-032"],
+    "description": "Allocates experienced operators from non-critical lines to support current bottleneck operations.",
+    "simulated_predicted_efficiency": 78.5,
+    "simulated_gain_percentage_points": 3.5,
+    "feasibility_status": "DEMO_FEASIBLE",
+    "constraint_notes": ["Requires manual override for OP-032 shift alignment."],
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "limitation": "Simulated gain — not a guaranteed productivity result."
+  },
+  {
+    "candidate_id": "C4-ALLOC-0002",
+    "line_id": "LINE-03",
+    "scenario_label": "Minimal Disruption",
+    "operator_ids": ["OP-004", "OP-007"],
+    "description": "Reallocates floaters within the same factory block to address the immediate absentee gap.",
+    "simulated_predicted_efficiency": 76.0,
+    "simulated_gain_percentage_points": 1.0,
+    "feasibility_status": "DEMO_FEASIBLE",
+    "constraint_notes": [],
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "limitation": "Simulated gain — not a guaranteed productivity result."
+  }
+]

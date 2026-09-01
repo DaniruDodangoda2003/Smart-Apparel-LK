@@ -1,0 +1,26 @@
+[
+  {
+    "machine_id": "MAC-0042",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "history_days": 548,
+    "fault_field_availability": 0.92,
+    "repair_duration_availability": 0.89,
+    "downtime_availability": 0.94,
+    "pm_history_available": true,
+    "data_sufficiency_status": "GOOD",
+    "explanation": "Longer maintenance history and high availability of selected maintenance fields are available in this synthetic demo case."
+  },
+  {
+    "machine_id": "MAC-0045",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "history_days": 43,
+    "fault_field_availability": 0.54,
+    "repair_duration_availability": 0.47,
+    "downtime_availability": 0.61,
+    "pm_history_available": false,
+    "data_sufficiency_status": "LIMITED",
+    "explanation": "Short observation window and missing repair logs reduce data sufficiency for model confidence."
+  }
+]

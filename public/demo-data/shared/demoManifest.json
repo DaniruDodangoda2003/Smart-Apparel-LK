@@ -1,0 +1,6 @@
+{
+  "demo_version": "2026-09-01-v1",
+  "default_factory_id": "FAC-001",
+  "default_shift_id": "SHIFT-A",
+  "output_mode": "DEMO_PRECOMPUTED"
+}

@@ -1,0 +1,13 @@
+[
+  { "operator_id": "OP-001", "factory_id": "FAC-001", "skill_level": "EXPERT", "status": "ACTIVE" },
+  { "operator_id": "OP-002", "factory_id": "FAC-001", "skill_level": "INTERMEDIATE", "status": "ACTIVE" },
+  { "operator_id": "OP-003", "factory_id": "FAC-001", "skill_level": "BEGINNER", "status": "ACTIVE" },
+  { "operator_id": "OP-004", "factory_id": "FAC-001", "skill_level": "EXPERT", "status": "ACTIVE" },
+  { "operator_id": "OP-005", "factory_id": "FAC-001", "skill_level": "INTERMEDIATE", "status": "ACTIVE" },
+  { "operator_id": "OP-006", "factory_id": "FAC-001", "skill_level": "INTERMEDIATE", "status": "ON_LEAVE" },
+  { "operator_id": "OP-007", "factory_id": "FAC-001", "skill_level": "EXPERT", "status": "ACTIVE" },
+  { "operator_id": "OP-008", "factory_id": "FAC-001", "skill_level": "BEGINNER", "status": "ACTIVE" },
+  { "operator_id": "OP-009", "factory_id": "FAC-001", "skill_level": "INTERMEDIATE", "status": "ACTIVE" },
+  { "operator_id": "OP-010", "factory_id": "FAC-001", "skill_level": "EXPERT", "status": "ACTIVE" },
+  { "operator_id": "OP-032", "factory_id": "FAC-001", "skill_level": "EXPERT", "status": "ACTIVE" }
+]

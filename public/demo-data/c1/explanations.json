@@ -1,0 +1,19 @@
+[
+  {
+    "inspection_id": "INSP-0001",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "contributors": [
+      {
+        "factor": "Machine Tension",
+        "impact": "HIGH",
+        "display_text": "High tension variance correlated with defect pattern."
+      },
+      {
+        "factor": "Oil Leakage Profile",
+        "impact": "MEDIUM",
+        "display_text": "Spatial defect pattern matches historical oil leakage signatures."
+      }
+    ]
+  }
+]

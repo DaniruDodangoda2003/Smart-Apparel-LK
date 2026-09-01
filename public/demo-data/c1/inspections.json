@@ -1,0 +1,4 @@
+[
+  { "inspection_id": "INSP-0001", "roll_id": "ROLL-00001", "status": "DEFECTIVE", "events": 3 },
+  { "inspection_id": "INSP-0002", "roll_id": "ROLL-00002", "status": "PASSED", "events": 0 }
+]

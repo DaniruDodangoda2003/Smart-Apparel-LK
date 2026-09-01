@@ -1,0 +1,37 @@
+[
+  {
+    "machine_id": "MAC-0042",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "drivers": [
+      {
+        "feature": "failures_30d",
+        "feature_value": 3,
+        "shap_value": 0.31,
+        "direction": "INCREASES_RISK",
+        "display_text": "Recent breakdown frequency increased the model-attributed risk."
+      },
+      {
+        "feature": "time_since_last_pm_days",
+        "feature_value": 64,
+        "shap_value": 0.24,
+        "direction": "INCREASES_RISK",
+        "display_text": "Time elapsed since last preventive maintenance increases risk."
+      },
+      {
+        "feature": "downtime_30d_hours",
+        "feature_value": 9.2,
+        "shap_value": 0.18,
+        "direction": "INCREASES_RISK",
+        "display_text": "High recent downtime hours contribute to elevated risk."
+      },
+      {
+        "feature": "mtbf_days",
+        "feature_value": 41,
+        "shap_value": 0.11,
+        "direction": "INCREASES_RISK",
+        "display_text": "Lower mean time between failures increases risk."
+      }
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "inspection_id": "INSP-0001",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "bounding_boxes": [
+      { "x": 120, "y": 240, "w": 80, "h": 60, "label": "Stain Indicator" }
+    ],
+    "explanation": "Model focus area — not proof of physical defect cause."
+  }
+]

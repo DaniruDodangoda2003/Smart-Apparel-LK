@@ -1,0 +1,18 @@
+[
+  {
+    "line_id": "LINE-03",
+    "predicted_efficiency": 0.62,
+    "target_efficiency": 0.80,
+    "staffing_level": "UNDERSTAFFED",
+    "workforce_alert_status": "ACTIVE",
+    "output_mode": "DEMO_PRECOMPUTED"
+  },
+  {
+    "line_id": "LINE-01",
+    "predicted_efficiency": 0.82,
+    "target_efficiency": 0.80,
+    "staffing_level": "OPTIMAL",
+    "workforce_alert_status": "NORMAL",
+    "output_mode": "DEMO_PRECOMPUTED"
+  }
+]

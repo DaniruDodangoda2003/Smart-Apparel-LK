@@ -1,0 +1,11 @@
+[
+  { "machine_id": "MAC-0042", "factory_id": "FAC-001", "line_id": "LINE-03", "display_code": "SN-042", "status": "ACTIVE" },
+  { "machine_id": "MAC-0043", "factory_id": "FAC-001", "line_id": "LINE-03", "display_code": "SN-043", "status": "ACTIVE" },
+  { "machine_id": "MAC-0044", "factory_id": "FAC-001", "line_id": "LINE-03", "display_code": "SN-044", "status": "ACTIVE" },
+  { "machine_id": "MAC-0045", "factory_id": "FAC-001", "line_id": "LINE-02", "display_code": "SN-045", "status": "MAINTENANCE" },
+  { "machine_id": "MAC-0046", "factory_id": "FAC-001", "line_id": "LINE-02", "display_code": "SN-046", "status": "ACTIVE" },
+  { "machine_id": "MAC-0047", "factory_id": "FAC-001", "line_id": "LINE-01", "display_code": "SN-047", "status": "ACTIVE" },
+  { "machine_id": "MAC-0048", "factory_id": "FAC-001", "line_id": "LINE-01", "display_code": "SN-048", "status": "ACTIVE" },
+  { "machine_id": "MAC-0049", "factory_id": "FAC-001", "line_id": "LINE-04", "display_code": "SN-049", "status": "ACTIVE" },
+  { "machine_id": "MAC-0050", "factory_id": "FAC-001", "line_id": "LINE-04", "display_code": "SN-050", "status": "INACTIVE" }
+]

@@ -1,0 +1,6 @@
+[
+  { "batch_id": "BAT-24081", "order_id": "ORD-24081", "style_id": "STY-00802", "status": "PLANNED" },
+  { "batch_id": "BAT-24082", "order_id": "ORD-24082", "style_id": "STY-00803", "status": "IN_PROGRESS" },
+  { "batch_id": "BAT-24083", "order_id": "ORD-24083", "style_id": "STY-00804", "status": "COMPLETED" },
+  { "batch_id": "BAT-24084", "order_id": "ORD-24084", "style_id": "STY-00805", "status": "PLANNED" }
+]

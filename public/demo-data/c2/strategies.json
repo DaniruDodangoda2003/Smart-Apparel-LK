@@ -1,0 +1,53 @@
+[
+  {
+    "strategy_id": "STRAT-C2-BASE",
+    "run_id": "RUN-C2-0001",
+    "strategy_name": "Baseline CAD marker",
+    "predicted_waste_pct": 11.8,
+    "marker_efficiency": 82.0,
+    "estimated_fabric_saving": 0,
+    "estimated_cost_saving": 0,
+    "optimisation_runtime": "N/A",
+    "grain_compliance": "100%",
+    "nap_compliance": "100%",
+    "spacing_compliance": "100%",
+    "fit_preservation": "100%",
+    "manufacturability": "High",
+    "status": "AVAILABLE",
+    "output_mode": "DEMO_PRECOMPUTED"
+  },
+  {
+    "strategy_id": "STRAT-C2-GANFP",
+    "run_id": "RUN-C2-0001",
+    "strategy_name": "Precomputed GA/NFP candidate",
+    "predicted_waste_pct": 9.4,
+    "marker_efficiency": 85.2,
+    "estimated_fabric_saving": 12.5,
+    "estimated_cost_saving": 10500,
+    "optimisation_runtime": "45s",
+    "grain_compliance": "100%",
+    "nap_compliance": "98%",
+    "spacing_compliance": "95%",
+    "fit_preservation": "100%",
+    "manufacturability": "Medium",
+    "status": "AVAILABLE",
+    "output_mode": "DEMO_PRECOMPUTED"
+  },
+  {
+    "strategy_id": "STRAT-C2-LOWWASTE",
+    "run_id": "RUN-C2-0001",
+    "strategy_name": "Precomputed constrained low-waste redesign candidate",
+    "predicted_waste_pct": 7.8,
+    "marker_efficiency": 87.5,
+    "estimated_fabric_saving": 21.0,
+    "estimated_cost_saving": 17640,
+    "optimisation_runtime": "120s",
+    "grain_compliance": "90%",
+    "nap_compliance": "85%",
+    "spacing_compliance": "80%",
+    "fit_preservation": "95%",
+    "manufacturability": "Low (Requires review)",
+    "status": "AVAILABLE",
+    "output_mode": "DEMO_PRECOMPUTED"
+  }
+]
