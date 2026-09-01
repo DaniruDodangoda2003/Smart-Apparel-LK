@@ -1,11 +1,22 @@
 [
   {
     "inspection_id": "INSP-0001",
-    "output_mode": "DEMO_PRECOMPUTED",
-    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "defect_class": "Oil Stain",
+    "confidence": 0.92,
     "bounding_boxes": [
-      { "x": 120, "y": 240, "w": 80, "h": 60, "label": "Stain Indicator" }
+      { "x": 150, "y": 200, "w": 50, "h": 75, "label": "Oil Stain" }
     ],
-    "explanation": "Model focus area — not proof of physical defect cause."
+    "xai_evidence": "High activation mapped to dark pixel cluster in center.",
+    "explanation": "Model-attributed contributor: Contrast anomaly detected.",
+    "model": "YOLOv8n"
+  },
+  {
+    "inspection_id": "INSP-0002",
+    "defect_class": "No known defect detected",
+    "confidence": 0.99,
+    "bounding_boxes": [],
+    "xai_evidence": "Uniform spatial activation. No anomalous regions.",
+    "explanation": "Model focus area is neutral.",
+    "model": "YOLOv8n"
   }
 ]

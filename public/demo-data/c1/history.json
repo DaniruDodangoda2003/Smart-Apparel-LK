@@ -1,20 +1,26 @@
 [
   {
+    "date": "2026-09-01T10:00:00Z",
     "inspection_id": "INSP-0001",
     "roll_id": "ROLL-00001",
-    "output_mode": "DEMO_PRECOMPUTED",
-    "data_classification": "SYNTHETIC_DEMONSTRATION",
-    "date": "2026-08-25T10:00:00Z",
+    "status": "DEFECTIVE",
     "events": 3,
-    "status": "DEFECTIVE"
+    "factory_id": "FAC-001",
+    "line_id": "LINE-03",
+    "machine_id": "MAC-005",
+    "source_type": "CAMERA_01",
+    "defect_class": "Oil Stain"
   },
   {
+    "date": "2026-09-01T11:30:00Z",
     "inspection_id": "INSP-0002",
     "roll_id": "ROLL-00002",
-    "output_mode": "DEMO_PRECOMPUTED",
-    "data_classification": "SYNTHETIC_DEMONSTRATION",
-    "date": "2026-08-26T14:30:00Z",
+    "status": "PASSED",
     "events": 0,
-    "status": "PASSED"
+    "factory_id": "FAC-001",
+    "line_id": "LINE-03",
+    "machine_id": "MAC-005",
+    "source_type": "CAMERA_02",
+    "defect_class": "None"
   }
 ]

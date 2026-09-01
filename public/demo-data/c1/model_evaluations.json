@@ -1,0 +1,38 @@
+[
+  {
+    "id": "model_yolov8n",
+    "name": "YOLOv8n",
+    "map5095": 0.45,
+    "critical_recall": 0.94,
+    "fps": 35,
+    "median_latency_ms": 25,
+    "p95_latency_ms": 32,
+    "memory_mb": 150,
+    "xai_iou": 0.85,
+    "status": "FEASIBLE"
+  },
+  {
+    "id": "model_yolov5n",
+    "name": "YOLOv5n",
+    "map5095": 0.42,
+    "critical_recall": 0.86,
+    "fps": 45,
+    "median_latency_ms": 20,
+    "p95_latency_ms": 28,
+    "memory_mb": 120,
+    "xai_iou": 0.65,
+    "status": "FEASIBLE"
+  },
+  {
+    "id": "model_ssd",
+    "name": "SSD-family",
+    "map5095": 0.38,
+    "critical_recall": 0.81,
+    "fps": 55,
+    "median_latency_ms": 18,
+    "p95_latency_ms": 24,
+    "memory_mb": 90,
+    "xai_iou": 0.50,
+    "status": "FEASIBLE"
+  }
+]
