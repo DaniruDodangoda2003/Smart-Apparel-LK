@@ -260,16 +260,38 @@ export default function C2RunReview() {
                 <label className="block text-sm text-gray-500">Draft Order Quantity</label>
                 <input type="number" className="w-full border border-gray-300 rounded p-2" value={erpDraft.quantity} onChange={e => updateDraft('erp', { ...erpDraft, quantity: e.target.value })} />
               </div>
+              
               <div>
-                <label className="block text-sm text-gray-500">Fabric Composition</label>
-                <input disabled className="w-full bg-gray-50 border border-gray-200 text-gray-400 italic rounded p-2" value="Not available in the current demo fixture." />
+                <label className="block text-sm text-gray-500">GSM</label>
+                <input disabled className="w-full bg-gray-50 border border-gray-200 text-gray-400 italic rounded p-2" value={runData.gsm || "Not available in the current demo fixture."} />
               </div>
               <div>
-                <label className="block text-sm text-gray-500">GSM / Supplier / Lot</label>
-                <input disabled className="w-full bg-gray-50 border border-gray-200 text-gray-400 italic rounded p-2" value="Not available in the current demo fixture." />
+                <label className="block text-sm text-gray-500">Supplier</label>
+                <input disabled className="w-full bg-gray-50 border border-gray-200 text-gray-400 italic rounded p-2" value={runData.supplier || "Not available in the current demo fixture."} />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-500">Lot</label>
+                <input disabled className="w-full bg-gray-50 border border-gray-200 text-gray-400 italic rounded p-2" value={runData.lot || "Not available in the current demo fixture."} />
+              </div>
+              
+              <div>
+                <label className="block text-sm text-gray-500">Size Ratio</label>
+                <input disabled className="w-full bg-gray-50 border border-gray-200 text-gray-400 italic rounded p-2" value={runData.size_ratio || "Not available in the current demo fixture."} />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-500">Fabric Price</label>
+                <input disabled className="w-full bg-gray-50 border border-gray-200 text-gray-400 italic rounded p-2" value={runData.fabric_price || "Not available in the current demo fixture."} />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-500">Planned Delivery Date</label>
+                <input disabled className="w-full bg-gray-50 border border-gray-200 text-gray-400 italic rounded p-2" value={runData.planned_delivery_date || "Not available in the current demo fixture."} />
               </div>
             </div>
-            <p className="text-xs text-gray-500 italic mt-2">Editable fields are draft demonstration inputs only. Changing them does not generate a new model prediction.</p>
+            
+            <div className="bg-orange-50 text-orange-800 p-3 rounded text-sm flex gap-2 border border-orange-200 mt-4">
+              <AlertTriangle className="w-5 h-5 shrink-0" />
+              <p>Changing these fields updates the local demonstration form only. It does not run a live prediction model.</p>
+            </div>
           </div>
         );
       case 1:
@@ -626,15 +648,21 @@ export default function C2RunReview() {
         <PageHeader title={`Run Review: ${runId}`} description="8-Step Precomputed Prediction Workflow" />
       </div>
       
-      {/* Stepper Header */}
-      <div className="flex justify-between items-center text-sm mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
+      {/* Tabs Header */}
+      <div className="flex flex-wrap text-sm mb-6 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {STEPS.map((step, idx) => (
-          <div key={idx} className={`flex items-center whitespace-nowrap ${idx === activeStep ? 'text-blue-600 font-bold' : (idx < activeStep ? 'text-gray-600' : 'text-gray-400')}`}>
-            <span className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 border ${idx === activeStep ? 'border-blue-600 bg-blue-50' : (idx < activeStep ? 'border-gray-600 bg-gray-50' : 'border-gray-300')}`}>
+          <div 
+            key={idx} 
+            className={`flex-1 min-w-[160px] text-center p-3 border-b-2 ${idx !== STEPS.length - 1 ? 'border-r border-gray-200' : ''} ${
+              idx === activeStep 
+                ? 'border-b-blue-600 bg-blue-50 text-blue-700 font-bold' 
+                : (idx < activeStep ? 'border-b-transparent bg-gray-50 text-gray-700' : 'border-b-transparent bg-white text-gray-400')
+            }`}
+          >
+            <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-xs mr-2 ${idx === activeStep ? 'bg-blue-600 text-white' : (idx < activeStep ? 'bg-gray-500 text-white' : 'bg-gray-200 text-gray-500')}`}>
               {idx + 1}
             </span>
             {step}
-            {idx < STEPS.length - 1 && <div className="w-8 h-px bg-gray-300 mx-3"></div>}
           </div>
         ))}
       </div>
