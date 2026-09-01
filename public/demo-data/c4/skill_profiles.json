@@ -1,15 +1,67 @@
 [
   {
     "operator_id": "OP-001",
+    "legacy_id": "WRK-001",
+    "display_name": "Samanthi K.",
+    "grade": "Grade B",
+    "primary_machine": "Single Needle",
+    "secondary_machine": "Overlock",
     "synthetic_skill_tags": ["Single Needle", "Overlock", "Collar Attach"],
     "synthetic_preference": "Prefers morning shifts",
+    "historical_efficiency": 0.72,
+    "attendance_rate": 0.95,
+    "overtime_past_7_days": 4,
+    "availability": "AVAILABLE",
+    "current_line": "LINE-01",
+    "competency_evidence": {
+      "speed": "Average",
+      "quality": "High",
+      "versatility": "High"
+    },
     "output_mode": "DEMO_PRECOMPUTED",
     "data_classification": "SYNTHETIC_DEMONSTRATION"
   },
   {
     "operator_id": "OP-032",
+    "legacy_id": "WRK-032",
+    "display_name": "Nayana M.",
+    "grade": "Grade A",
+    "primary_machine": "Flatlock",
+    "secondary_machine": "Multi-Needle",
     "synthetic_skill_tags": ["Multi-Needle", "Flatlock", "Hemming"],
     "synthetic_preference": "Cross-training requested",
+    "historical_efficiency": 0.88,
+    "attendance_rate": 0.98,
+    "overtime_past_7_days": 2,
+    "availability": "AVAILABLE",
+    "current_line": "Float",
+    "competency_evidence": {
+      "speed": "High",
+      "quality": "High",
+      "versatility": "Medium"
+    },
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION"
+  },
+  {
+    "operator_id": "OP-051",
+    "legacy_id": "WRK-051",
+    "display_name": "Kumari W.",
+    "grade": "Grade C",
+    "primary_machine": "Single Needle",
+    "secondary_machine": "Flatlock",
+    "synthetic_skill_tags": ["Flatlock"],
+    "synthetic_preference": "Standard shifts",
+    "historical_efficiency": 0.52,
+    "attendance_rate": 0.90,
+    "overtime_past_7_days": 0,
+    "availability": "ON_LINE",
+    "current_line": "LINE-04",
+    "competency_evidence": {
+      "speed": "Low",
+      "quality": "Average",
+      "versatility": "Low"
+    },
     "output_mode": "DEMO_PRECOMPUTED",
     "data_classification": "SYNTHETIC_DEMONSTRATION"
   }

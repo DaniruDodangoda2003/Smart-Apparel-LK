@@ -6,14 +6,104 @@
       {
         "feature_key": "operator_skill_mismatch",
         "display_label": "Skill Level vs Target Complexity",
-        "contribution_score": 0.85,
+        "contribution_score": -0.09,
         "direction": "DECREASES_MODEL_OUTPUT"
       },
       {
         "feature_key": "operator_absence_count",
         "display_label": "Unplanned Absence Coverage",
-        "contribution_score": 0.60,
+        "contribution_score": -0.06,
         "direction": "DECREASES_MODEL_OUTPUT"
+      },
+      {
+        "feature_key": "worker_experience",
+        "display_label": "Experience",
+        "contribution_score": 0.02,
+        "direction": "INCREASES_MODEL_OUTPUT"
+      }
+    ],
+    "operation_breakdown": [
+      {
+        "operation_seq": "01",
+        "operation_name": "Sleeve Attach",
+        "machine_type": "Overlock",
+        "required_smv": 0.45,
+        "current_operator": "OP-001",
+        "operator_rating": "Grade B",
+        "bottleneck_severity": "LOW"
+      },
+      {
+        "operation_seq": "02",
+        "operation_name": "Side Seam",
+        "machine_type": "Overlock",
+        "required_smv": 0.60,
+        "current_operator": "OP-002 (Absent)",
+        "operator_rating": "N/A",
+        "bottleneck_severity": "HIGH"
+      }
+    ],
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "limitation": "Model attribution does not prove operational or employee-level causation."
+  },
+  {
+    "diagnostic_id": "C4-DIAG-0002",
+    "line_id": "LINE-04",
+    "contributors": [
+      {
+        "feature_key": "skill_mismatch",
+        "display_label": "Skill Mismatch",
+        "contribution_score": -0.165,
+        "direction": "DECREASES_MODEL_OUTPUT"
+      },
+      {
+        "feature_key": "wip_starvation",
+        "display_label": "WIP Starvation",
+        "contribution_score": -0.03,
+        "direction": "DECREASES_MODEL_OUTPUT"
+      },
+      {
+        "feature_key": "experience",
+        "display_label": "Experience",
+        "contribution_score": 0.03,
+        "direction": "INCREASES_MODEL_OUTPUT"
+      }
+    ],
+    "operation_breakdown": [
+      {
+        "operation_seq": "03",
+        "operation_name": "Collar Joining",
+        "machine_type": "Flatlock",
+        "required_smv": 0.52,
+        "current_operator": "WRK-051",
+        "operator_rating": "Grade C",
+        "bottleneck_severity": "CRITICAL"
+      }
+    ],
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "limitation": "Model attribution does not prove operational or employee-level causation."
+  },
+  {
+    "diagnostic_id": "C4-DIAG-0003",
+    "line_id": "LINE-02",
+    "contributors": [
+      {
+        "feature_key": "operator_absence_count",
+        "display_label": "Unplanned Absence (Overlock)",
+        "contribution_score": -0.14,
+        "direction": "DECREASES_MODEL_OUTPUT"
+      }
+    ],
+    "operation_breakdown": [
+      {
+        "operation_seq": "04",
+        "operation_name": "Hemming",
+        "machine_type": "Overlock",
+        "required_smv": 0.70,
+        "current_operator": "Unassigned (Absent)",
+        "operator_rating": "N/A",
+        "bottleneck_severity": "CRITICAL"
       }
     ],
     "output_mode": "DEMO_PRECOMPUTED",
