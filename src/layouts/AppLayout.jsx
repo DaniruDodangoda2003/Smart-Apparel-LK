@@ -46,7 +46,8 @@ export default function AppLayout() {
   };
 
   // Derive route-specific role display without mutating global AppContext userRole
-  const displayUserRole = location.pathname.startsWith('/c3') ? 'Maintenance Manager' : 
+  const displayUserRole = location.pathname.startsWith('/c1') ? 'QC Manager' :
+                          location.pathname.startsWith('/c3') ? 'Maintenance Manager' : 
                           location.pathname.startsWith('/c4') ? 'Production Manager / Workforce Planner' : 
                           userRole;
 
