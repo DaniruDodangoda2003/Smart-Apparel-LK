@@ -1,19 +1,25 @@
 [
   {
     "inspection_id": "INSP-0001",
-    "output_mode": "DEMO_PRECOMPUTED",
-    "data_classification": "SYNTHETIC_DEMONSTRATION",
-    "contributors": [
+    "probable_causes": [
       {
-        "factor": "Machine Tension",
-        "impact": "HIGH",
-        "display_text": "High tension variance correlated with defect pattern."
+        "rank": 1,
+        "cause": "Machine Lubricant Leak (Needle Bed)",
+        "supporting_evidence": "Oil Stain defect detected; Maintenance log shows recent needle replacement.",
+        "missing_evidence": "No confirmation of actual leak from operator.",
+        "review_status": "PENDING"
       },
       {
-        "factor": "Oil Leakage Profile",
-        "impact": "MEDIUM",
-        "display_text": "Spatial defect pattern matches historical oil leakage signatures."
+        "rank": 2,
+        "cause": "Contaminated Yarn Batch",
+        "supporting_evidence": "Stain covers large area.",
+        "missing_evidence": "No other machines report similar issue for YRN-771.",
+        "review_status": "PENDING"
       }
     ]
+  },
+  {
+    "inspection_id": "INSP-0002",
+    "probable_causes": []
   }
 ]
