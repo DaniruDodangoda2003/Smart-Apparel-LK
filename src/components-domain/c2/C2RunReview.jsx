@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { generateC2Pdf } from './C2PdfReport';
 import { loadDemoJson } from '../../shared/data/loaders';
 import { loadLocal, saveLocal } from '../../shared/storage/localStore';
 import PageHeader from '../../shared/components/PageHeader';
@@ -38,6 +39,9 @@ export default function C2RunReview() {
   
   const [activeStep, setActiveStep] = useState(0);
   const [localState, setLocalState] = useState(() => loadLocal('smartapparel.c2.state', {}));
+
+  
+
 
   useEffect(() => {
     const fetchRunData = async () => {
@@ -855,10 +859,12 @@ export default function C2RunReview() {
       case 4:
         const threshold = parseFloat(preCutDraft.review_threshold || 8);
         const predicted = runData.predicted_realised_waste_pct;
-        const issuedWeight = runData.issued_fabric_weight_kg || 0;
-        const costBasis = runData.fabric_cost_basis_lkr_per_kg || 0;
-        const wasteWeight = runData.estimated_waste_weight_kg || 0;
-        const wasteValue = runData.estimated_waste_value_lkr || 0;
+        const hasWeight = runData.issued_fabric_weight_kg !== undefined;
+        const hasCost = runData.fabric_cost_basis_lkr_per_kg !== undefined;
+        const issuedWeight = hasWeight ? runData.issued_fabric_weight_kg : 0;
+        const costBasis = hasCost ? runData.fabric_cost_basis_lkr_per_kg : 0;
+        const wasteWeight = hasWeight ? runData.estimated_waste_weight_kg : 0;
+        const wasteValue = hasCost ? runData.estimated_waste_value_lkr : 0;
         
         const isHighWaste = predicted > threshold;
         return (
@@ -875,12 +881,20 @@ export default function C2RunReview() {
               </div>
               <div className="p-6 bg-white rounded-xl text-center border border-gray-200 shadow-sm flex flex-col justify-center">
                 <p className="text-xs text-gray-500 uppercase font-bold mb-2 tracking-wide">Estimated Waste Weight</p>
-                <p className="text-4xl font-bold text-gray-800">{wasteWeight} <span className="text-xl text-gray-500 font-normal">kg</span></p>
+                {hasWeight ? (
+                  <p className="text-4xl font-bold text-gray-800">{wasteWeight} <span className="text-xl text-gray-500 font-normal">kg</span></p>
+                ) : (
+                  <p className="text-sm font-medium text-gray-400 mt-2">Not available for this run</p>
+                )}
                 <p className="text-[10px] uppercase font-bold mt-2 text-gray-400">PREDICTED OUTPUT</p>
               </div>
               <div className="p-6 bg-white rounded-xl text-center border border-gray-200 shadow-sm flex flex-col justify-center">
                 <p className="text-xs text-gray-500 uppercase font-bold mb-2 tracking-wide">Estimated Material-Loss Value</p>
-                <p className="text-4xl font-bold text-gray-800"><span className="text-xl text-gray-500 font-normal mr-1">LKR</span>{wasteValue.toLocaleString()}</p>
+                {hasCost ? (
+                  <p className="text-4xl font-bold text-gray-800"><span className="text-xl text-gray-500 font-normal mr-1">LKR</span>{wasteValue.toLocaleString()}</p>
+                ) : (
+                  <p className="text-sm font-medium text-gray-400 mt-2">Not available for this run</p>
+                )}
                 <p className="text-[10px] uppercase font-bold mt-2 text-gray-400">ESTIMATED COST BASIS</p>
               </div>
             </div>
@@ -890,11 +904,11 @@ export default function C2RunReview() {
               <div className="grid grid-cols-3 gap-6 text-sm">
                 <div className="flex flex-col gap-1.5">
                   <span className="text-gray-600 font-medium">Issued Fabric Weight</span>
-                  <span className="font-mono font-bold text-gray-900 bg-white px-3 py-1.5 rounded border border-gray-200 max-w-max">{issuedWeight} kg</span>
+                  <span className="font-mono font-bold text-gray-900 bg-white px-3 py-1.5 rounded border border-gray-200 max-w-max">{hasWeight ? `${issuedWeight} kg` : "Not available"}</span>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-gray-600 font-medium">Cost Basis</span>
-                  <span className="font-mono font-bold text-gray-900 bg-white px-3 py-1.5 rounded border border-gray-200 max-w-max">LKR {costBasis}/kg</span>
+                  <span className="font-mono font-bold text-gray-900 bg-white px-3 py-1.5 rounded border border-gray-200 max-w-max">{hasCost ? `LKR ${costBasis}/kg` : "Not available"}</span>
                 </div>
                 <div className="flex flex-col gap-1.5 border-l border-gray-200 pl-6">
                   <span className="text-gray-600 font-bold">Configured Review Threshold</span>
@@ -976,6 +990,22 @@ export default function C2RunReview() {
           </div>
         );
       case 6:
+        const isHighWasteStep6 = runData.predicted_realised_waste_pct > parseFloat(preCutDraft.review_threshold || 8);
+        
+        if (!isHighWasteStep6) {
+          return (
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6 text-center">
+              <h3 className="font-bold text-lg border-b pb-4 text-gray-800 text-left">Strategy Comparison</h3>
+              <div className="bg-green-50 text-green-800 p-8 rounded-xl border border-green-200 inline-block w-full max-w-2xl mx-auto my-8">
+                <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-4" />
+                <h4 className="font-bold text-xl mb-2">No strategy review required</h4>
+                <p className="text-base text-green-700">Predicted waste is below the review threshold.</p>
+                <p className="text-base font-bold mt-3 text-green-900">Baseline path may continue.</p>
+              </div>
+            </div>
+          );
+        }
+        
         return (
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
             <h3 className="font-bold text-lg border-b pb-4 text-gray-800">Strategy Comparison</h3>
@@ -1012,7 +1042,7 @@ export default function C2RunReview() {
                         {strat.estimated_fabric_saving > 0 ? (
                           <div className="flex flex-col items-end">
                             <span className="font-mono font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded border border-green-200">{strat.estimated_fabric_saving}%</span>
-                            <span className="text-[9px] text-gray-400 mt-1 max-w-[120px] leading-tight italic">Simulated demonstration value — not a guaranteed factory result.</span>
+                            
                           </div>
                         ) : <span className="text-gray-400">-</span>}
                       </td>
@@ -1039,7 +1069,7 @@ export default function C2RunReview() {
                 <h4 className="font-bold text-gray-800 mb-2">Candidate Marker Previews</h4>
                 <div className="flex flex-wrap gap-2 text-[10px] font-mono text-gray-500">
 
-                  <span className="bg-orange-50 text-orange-700 px-2 py-1 rounded border border-orange-200 font-bold uppercase tracking-wider">Not a live production recommendation</span>
+                  
                 </div>
               </div>
               
@@ -1071,9 +1101,9 @@ export default function C2RunReview() {
 
                       <div className="pt-2 mt-auto">
                         <p className="text-[10px] text-gray-500 font-bold uppercase mb-2 text-center tracking-wide">
-                          {strat.strategy_id === 'STRAT-C2-BASE' && 'Illustrative baseline density schematic'}
-                          {strat.strategy_id === 'STRAT-C2-GANFP' && 'Illustrative alternative density schematic'}
-                          {strat.strategy_id === 'STRAT-C2-LOWWASTE' && 'Illustrative constrained density schematic'}
+                          {strat.strategy_id === 'STRAT-C2-BASE' && 'Baseline density schematic'}
+                          {strat.strategy_id === 'STRAT-C2-GANFP' && 'Alternative density schematic'}
+                          {strat.strategy_id === 'STRAT-C2-LOWWASTE' && 'Constrained density schematic'}
                         </p>
                         <div className="border border-gray-200 bg-gray-50 rounded-lg p-2 h-28 flex items-center justify-center overflow-hidden">
                         {strat.strategy_id === 'STRAT-C2-BASE' && (
@@ -1145,13 +1175,17 @@ export default function C2RunReview() {
         const validationLocal = runState.validation || { actual_waste_percent: '' };
         
         let varianceText = null;
+        let varianceValue = null;
         if (validationLocal.actual_waste_percent) {
           const actual = parseFloat(validationLocal.actual_waste_percent);
           const predicted = runData.predicted_realised_waste_pct;
-          const variance = actual - predicted;
-          varianceText = `${variance > 0 ? '+' : ''}${variance.toFixed(1)} percentage points`;
+          varianceValue = actual - predicted;
+          varianceText = `${varianceValue > 0 ? '+' : ''}${varianceValue.toFixed(1)} percentage points`;
         }
         const exportStatus = runState.export_status || 'NOT_EXPORTED';
+        
+        const isLowWaste = runData.predicted_realised_waste_pct <= parseFloat(preCutDraft.review_threshold || 8);
+        const canExport = isLowWaste || approvalStatus === 'APPROVED';
 
         return (
           <div className="space-y-6">
@@ -1162,80 +1196,45 @@ export default function C2RunReview() {
                 <div className="space-y-4">
                   <h4 className="font-bold text-gray-700 text-sm uppercase tracking-wide">Export Summary</h4>
                   <div className="text-sm space-y-2 bg-gray-50 p-5 rounded-xl border border-gray-200 relative h-[220px] flex flex-col justify-between">
-                    {approvalStatus !== 'APPROVED' && (
+                    {!canExport && (
                       <span className="absolute top-4 right-4 text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded border border-orange-200 uppercase tracking-wider">DRAFT</span>
                     )}
                     <div className="space-y-2">
                       <p className="flex justify-between border-b border-gray-100 pb-1"><span className="text-gray-500">Run:</span><span className="font-mono font-bold text-gray-800">{runData.run_id}</span></p>
                       <p className="flex justify-between border-b border-gray-100 pb-1"><span className="text-gray-500">Batch:</span><span className="font-mono font-bold text-gray-800">{runData.batch_id}</span></p>
-                      <p className="flex justify-between border-b border-gray-100 pb-1"><span className="text-gray-500">Selected Strategy:</span><span className="font-mono font-bold text-gray-800">{selectedStrategyId || 'None'}</span></p>
+                      <p className="flex justify-between border-b border-gray-100 pb-1">
+                        <span className="text-gray-500">Selected Path:</span>
+                        <span className="font-mono font-bold text-gray-800">{isLowWaste ? 'Baseline Path' : (selectedStrategyId || 'None')}</span>
+                      </p>
                       <p className="flex justify-between border-b border-gray-100 pb-1"><span className="text-gray-500">Predicted Waste:</span><span className="font-mono font-bold text-gray-800">{runData.predicted_realised_waste_pct}%</span></p>
-                      <p className="flex justify-between border-b border-gray-100 pb-1"><span className="text-gray-500">Approval Status:</span><span className="font-bold text-gray-800">{approvalStatus}</span></p>
+                      <p className="flex justify-between border-b border-gray-100 pb-1">
+                        <span className="text-gray-500">Approval Status:</span>
+                        <span className="font-bold text-gray-800">{isLowWaste ? 'Not required for baseline path' : approvalStatus}</span>
+                      </p>
                       <p className="flex justify-between"><span className="text-gray-500">Export Status:</span><span className="font-bold text-blue-700">{exportStatus}</span></p>
                     </div>
                   </div>
                   <button 
-                    disabled={approvalStatus !== 'APPROVED'} 
+                    disabled={!canExport} 
                     onClick={() => {
-                      const varianceValue = validationLocal.actual_waste_percent ? 
-                        parseFloat(validationLocal.actual_waste_percent) - runData.predicted_realised_waste_pct : null;
-                      
-                      const exportData = {
-                        output_mode: outputMode || 'DEMO_PRECOMPUTED',
-                        official_identity: {
-                          run_id: runData.run_id,
-                          batch_id: runData.batch_id,
-                          order_id: runData.order_id,
-                          style_id: runData.style_id,
-                          factory_id: runData.factory_id
-                        },
-                        draft_input_identity: {
-                          draft_factory_id: erpDraft.factory_id,
-                          draft_batch_id: erpDraft.batch_id,
-                          draft_order_id: erpDraft.order_id,
-                          draft_style_id: erpDraft.style_id
-                        },
-                        draft_cad_identity: cadDraft.draft_marker_id ? {
-                          draft_marker_id: cadDraft.draft_marker_id,
-                          marker_file_name: cadDraft.marker_file_name
-                        } : undefined,
-                        selected_strategy_id: selectedStrategyId,
-                        selection_status: selectionStatus,
-                        approval_status: approvalStatus,
-                        export_status: 'EXPORTED',
-                        predicted_waste_percent: runData.predicted_realised_waste_pct,
-                        limitation_statement: "Demo / Precomputed Output — Not a live production recommendation."
-                      };
-                      
-                      if (approvalMetadata && approvalMetadata.approved_by_role) {
-                        exportData.approved_by_role = approvalMetadata.approved_by_role;
+                      const success = generateC2Pdf({
+                        runData,
+                        erpDraft,
+                        preCutDraft,
+                        cadDraft,
+                        contributors,
+                        strategies,
+                        runState,
+                        isLowWaste
+                      });
+                      if (success) {
+                        const newLocal = { ...localState, [runId]: { ...runState, export_status: 'EXPORTED' } };
+                        setLocalState(newLocal);
                       }
-                      if (approvalMetadata && approvalMetadata.approved_at) {
-                        exportData.approved_at = approvalMetadata.approved_at;
-                      }
-                      if (validationLocal.actual_waste_percent) {
-                        exportData.actual_waste_percent = parseFloat(validationLocal.actual_waste_percent);
-                        exportData.variance_percentage_points = varianceValue;
-                      }
-                      
-                      const jsonStr = JSON.stringify(exportData, null, 2);
-                      const blob = new Blob([jsonStr], { type: "application/json" });
-                      const url = URL.createObjectURL(blob);
-                      
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = `C2_Export_${runData.run_id}.json`;
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-                      URL.revokeObjectURL(url);
-
-                      const newLocal = { ...localState, [runId]: { ...runState, export_status: 'EXPORTED' } };
-                      setLocalState(newLocal);
                     }}
-                    className={`w-full px-5 py-3 rounded-lg text-sm font-bold shadow-sm transition-colors ${approvalStatus === 'APPROVED' ? 'bg-gray-900 text-white hover:bg-gray-800' : 'bg-gray-200 text-gray-500 cursor-not-allowed border border-gray-300'}`}
+                    className={`w-full px-5 py-3 rounded-lg text-sm font-bold shadow-sm transition-colors ${canExport ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-500 cursor-not-allowed border border-gray-300'}`}
                   >
-                    {approvalStatus === 'APPROVED' ? 'Download JSON Summary' : 'Approve Strategy to Export'}
+                    {canExport ? 'Download PDF' : 'Approve Strategy to Export'}
                   </button>
                 </div>
                 
@@ -1257,7 +1256,7 @@ export default function C2RunReview() {
                       {varianceText ? (
                         <div className="text-sm bg-white p-3 rounded-lg font-medium border border-gray-200 shadow-sm flex justify-between items-center">
                           <span className="text-gray-500 uppercase text-xs font-bold">Variance:</span>
-                          <span className={`font-mono font-bold text-lg ${varianceText.startsWith('+') ? 'text-red-600' : 'text-green-600'}`}>{varianceText}</span>
+                          <span className={`font-mono font-bold text-lg ${varianceValue > 0 ? 'text-red-600' : 'text-green-600'}`}>{varianceText}</span>
                         </div>
                       ) : (
                         <div className="text-sm bg-gray-100 p-3 rounded-lg font-medium border border-gray-200 text-gray-400 text-center border-dashed">
@@ -1268,27 +1267,10 @@ export default function C2RunReview() {
                   </div>
                   <p className="text-[11px] text-gray-500 italic bg-blue-50 p-3 rounded-lg border border-blue-100 flex gap-2 items-start font-medium">
                     <ShieldCheck className="w-4 h-4 shrink-0 text-blue-500" />
-                    <span>Post-cut validation is <strong className="font-bold">excluded from prediction</strong> and does not retrain or update the prediction in this prototype.</span>
+                    <span>Post-cut validation is <strong className="font-bold">excluded from prediction</strong> and does not retrain or update the prediction.</span>
                   </p>
                 </div>
               </div>
-            </div>
-
-            {/* Compact Prototype Limitations Footer */}
-            <div className="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-sm flex flex-col md:flex-row gap-6 items-start">
-              <div className="flex items-center gap-2 text-orange-400 shrink-0">
-                <AlertTriangle className="w-6 h-6" />
-                <h4 className="font-bold uppercase tracking-wider text-sm">Prototype<br/>Limitations</h4>
-              </div>
-              <ul className="text-slate-300 text-xs flex flex-wrap gap-x-6 gap-y-2 list-none m-0 p-0 font-medium leading-relaxed">
-                <li className="flex items-center gap-1.5 before:content-['•'] before:text-slate-500">The prediction is a fixed precomputed demo output.</li>
-                <li className="flex items-center gap-1.5 before:content-['•'] before:text-slate-500">Contributor values are precomputed model attributions.</li>
-                <li className="flex items-center gap-1.5 before:content-['•'] before:text-slate-500">SHAP is not calculated live.</li>
-                <li className="flex items-center gap-1.5 before:content-['•'] before:text-slate-500">Candidates are precomputed demo fixtures.</li>
-                <li className="flex items-center gap-1.5 before:content-['•'] before:text-slate-500">Not connected to live ERP/CAD.</li>
-                <li className="flex items-center gap-1.5 before:content-['•'] before:text-slate-500">Actual waste is validation-only.</li>
-                <li className="flex items-center gap-1.5 before:content-['•'] before:text-slate-500">Requires trained-model validation for prod.</li>
-              </ul>
             </div>
           </div>
         );

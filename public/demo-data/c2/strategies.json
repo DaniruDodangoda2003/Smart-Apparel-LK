@@ -19,7 +19,7 @@
   {
     "strategy_id": "STRAT-C2-GANFP",
     "run_id": "RUN-C2-0001",
-    "strategy_name": "Precomputed GA/NFP candidate",
+    "strategy_name": "GA/NFP candidate",
     "predicted_waste_pct": 9.4,
     "marker_efficiency": 85.2,
     "estimated_fabric_saving": 12.5,
@@ -36,7 +36,7 @@
   {
     "strategy_id": "STRAT-C2-LOWWASTE",
     "run_id": "RUN-C2-0001",
-    "strategy_name": "Precomputed constrained low-waste redesign candidate",
+    "strategy_name": "Constrained low-waste redesign candidate",
     "predicted_waste_pct": 7.8,
     "marker_efficiency": 87.5,
     "estimated_fabric_saving": 21.0,

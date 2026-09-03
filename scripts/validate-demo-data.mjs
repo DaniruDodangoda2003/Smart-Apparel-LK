@@ -191,6 +191,20 @@ data['c2/runs.json'].forEach((run, i) => {
   if (run.estimated_waste_value_lkr !== undefined) {
     if (typeof run.estimated_waste_value_lkr !== 'number' || run.estimated_waste_value_lkr < 0) error(`Invalid estimated_waste_value_lkr in C2 runs[${i}]`);
   }
+  
+  if (run.issued_fabric_weight_kg !== undefined && run.predicted_realised_waste_pct !== undefined && run.estimated_waste_weight_kg !== undefined) {
+    const expectedWasteWeight = run.issued_fabric_weight_kg * (run.predicted_realised_waste_pct / 100);
+    if (Math.abs(expectedWasteWeight - run.estimated_waste_weight_kg) > 0.1) {
+      error(`Invalid formula: estimated_waste_weight_kg (${run.estimated_waste_weight_kg}) does not match issued_weight * predicted_waste (${expectedWasteWeight}) in C2 runs[${i}]`);
+    }
+  }
+
+  if (run.estimated_waste_weight_kg !== undefined && run.fabric_cost_basis_lkr_per_kg !== undefined && run.estimated_waste_value_lkr !== undefined) {
+    const expectedValue = run.estimated_waste_weight_kg * run.fabric_cost_basis_lkr_per_kg;
+    if (Math.abs(expectedValue - run.estimated_waste_value_lkr) > 1) {
+      error(`Invalid formula: estimated_waste_value_lkr (${run.estimated_waste_value_lkr}) does not match waste_weight * cost_basis (${expectedValue}) in C2 runs[${i}]`);
+    }
+  }
   if (run.data_classification !== undefined) {
     if (run.data_classification !== 'SYNTHETIC_DEMONSTRATION') error(`Invalid data_classification in C2 runs[${i}]`);
   }

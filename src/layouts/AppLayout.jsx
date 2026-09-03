@@ -28,9 +28,6 @@ const navigation = [
 
 export default function AppLayout() {
   const { 
-    selectedFactoryId, 
-    selectedShiftId, 
-    demoDate, 
     outputMode, 
     userRole,
     openAlertCount,
@@ -92,25 +89,7 @@ export default function AppLayout() {
             <h2 className="text-lg font-semibold text-gray-800">
               {navigation.find(n => isActive(n.href))?.name || 'Dashboard'}
             </h2>
-            {!location.pathname.startsWith('/c2') && (
-              <>
-                <div className="h-6 w-px bg-gray-300 hidden md:block"></div>
-                <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
-                  <div className="flex items-center gap-1.5">
-                    <Building2 className="w-4 h-4 text-gray-400" />
-                    <span className="font-medium text-gray-900">{selectedFactoryId}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4 text-gray-400" />
-                    <span className="font-medium text-gray-900">{selectedShiftId}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4 text-gray-400" />
-                    <span>{demoDate}</span>
-                  </div>
-                </div>
-              </>
-            )}
+
           </div>
           <div className="flex items-center gap-4 text-sm">
             <DemoBadge mode={outputMode} />

@@ -31,6 +31,10 @@
     "risk_status": "NORMAL",
     "strategy_status": "APPROVED",
     "post_cut_validation_status": "NOT_AVAILABLE",
-    "output_mode": "DEMO_PRECOMPUTED"
+    "output_mode": "DEMO_PRECOMPUTED",
+    "issued_fabric_weight_kg": 500,
+    "estimated_waste_weight_kg": 36,
+    "fabric_cost_basis_lkr_per_kg": 840,
+    "estimated_waste_value_lkr": 30240
   }
 ]

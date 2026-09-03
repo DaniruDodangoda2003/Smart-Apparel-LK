@@ -42,5 +42,49 @@
     "contribution_value": -0.5,
     "interpretation": "Reduced predicted waste",
     "review_prompt": "Model-attributed contributor. Review this factor."
+  },
+  {
+    "contributor_id": "SHAP-C2-005",
+    "run_id": "RUN-C2-0002",
+    "feature": "marker_efficiency",
+    "display_label": "High marker efficiency",
+    "value": "86.5%",
+    "contribution_direction": "DECREASE",
+    "contribution_value": -1.2,
+    "interpretation": "Reduced predicted waste",
+    "review_prompt": "Contributor to lower predicted waste."
+  },
+  {
+    "contributor_id": "SHAP-C2-006",
+    "run_id": "RUN-C2-0002",
+    "feature": "splice_count",
+    "display_label": "Low splice count",
+    "value": "2 splices",
+    "contribution_direction": "DECREASE",
+    "contribution_value": -0.8,
+    "interpretation": "Reduced predicted waste",
+    "review_prompt": "Contributor to lower predicted waste."
+  },
+  {
+    "contributor_id": "SHAP-C2-007",
+    "run_id": "RUN-C2-0002",
+    "feature": "defects_per_lay",
+    "display_label": "Low defects per lay",
+    "value": "0.1",
+    "contribution_direction": "DECREASE",
+    "contribution_value": -0.4,
+    "interpretation": "Reduced predicted waste",
+    "review_prompt": "Contributor to lower predicted waste."
+  },
+  {
+    "contributor_id": "SHAP-C2-008",
+    "run_id": "RUN-C2-0002",
+    "feature": "spread_length",
+    "display_label": "Stable spread length",
+    "value": "Stable",
+    "contribution_direction": "DECREASE",
+    "contribution_value": -0.2,
+    "interpretation": "Reduced predicted waste",
+    "review_prompt": "Contributor to lower predicted waste."
   }
 ]
