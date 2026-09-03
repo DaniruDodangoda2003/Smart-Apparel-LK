@@ -1,6 +1,10 @@
 {
-  "active_machines": 9,
+  "active_machines": 44,
   "critical_risk_machines": 1,
-  "warning_risk_machines": 2,
-  "maintenance_actions_pending": 3
+  "high_risk_machines": 8,
+  "warning_risk_machines": 7,
+  "manual_review_cases": 2,
+  "maintenance_actions_pending": 3,
+  "last_fleet_scan": "2026-09-01T06:00:00Z",
+  "output_mode": "DEMO_PRECOMPUTED"
 }

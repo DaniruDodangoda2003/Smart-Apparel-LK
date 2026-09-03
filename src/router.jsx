@@ -16,6 +16,7 @@ import C1History from './components-domain/c1/C1History';
 import C3FleetOverview from './components-domain/c3/C3FleetOverview';
 import C3MachineAnalysis from './components-domain/c3/C3MachineAnalysis';
 import C3MaintenanceActions from './components-domain/c3/C3MaintenanceActions';
+import C3MaintenanceActionForm from './components-domain/c3/C3MaintenanceActionForm';
 import C4WorkforceOverview from './components-domain/c4/C4WorkforceOverview';
 import C4LineDiagnostics from './components-domain/c4/C4LineDiagnostics';
 import C4OperatorProfiles from './components-domain/c4/C4OperatorProfiles';
@@ -78,8 +79,8 @@ export const router = createBrowserRouter([
         element: <C3MachineAnalysis />
       },
       {
-        path: 'c3/machine/:machineId/explain',
-        element: <RoutePlaceholder pageName="Machine AI Explanation" />
+        path: 'c3/machine/:machineId/action/new',
+        element: <C3MaintenanceActionForm />
       },
       {
         path: 'c3/actions',

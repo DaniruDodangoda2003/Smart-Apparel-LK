@@ -4,9 +4,19 @@
     "output_mode": "DEMO_PRECOMPUTED",
     "data_classification": "SYNTHETIC_DEMONSTRATION",
     "points": [
-      { "horizon_days": 7, "failure_free_probability": 0.91 },
+      { "horizon_days": 7,  "failure_free_probability": 0.91 },
       { "horizon_days": 14, "failure_free_probability": 0.76 },
       { "horizon_days": 30, "failure_free_probability": 0.52 }
+    ]
+  },
+  {
+    "machine_id": "MAC-0051",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "points": [
+      { "horizon_days": 7,  "failure_free_probability": 0.96 },
+      { "horizon_days": 14, "failure_free_probability": 0.91 },
+      { "horizon_days": 30, "failure_free_probability": 0.83 }
     ]
   }
 ]

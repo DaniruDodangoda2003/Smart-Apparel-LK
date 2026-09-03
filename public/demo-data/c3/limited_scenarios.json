@@ -10,9 +10,29 @@
     "risk_14d": 0.75,
     "risk_30d": 0.84,
     "data_sufficiency": "LIMITED",
-    "priority": "HIGH",
+    "priority": "MANUAL_REVIEW",
+    "scored_at": "2026-09-01T06:00:00Z",
+    "model_version": "pm-xgb-v2.1",
     "scenario_title": "Elevated Risk + Limited Evidence Scenario",
     "decision_recommendation": "Manual Review Recommended",
     "decision_explanation": "Elevated predicted maintenance risk combined with LIMITED data sufficiency requires manual engineering review before scheduling physical maintenance."
+  },
+  {
+    "machine_id": "MAC-0088",
+    "display_code": "SN-088",
+    "factory_id": "FAC-001",
+    "line_id": "LINE-01",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "risk_7d": 0.62,
+    "risk_14d": 0.74,
+    "risk_30d": 0.81,
+    "data_sufficiency": "LIMITED",
+    "priority": "MANUAL_REVIEW",
+    "scored_at": "2026-09-01T06:00:00Z",
+    "model_version": "pm-xgb-v2.1",
+    "scenario_title": "Case B — Elevated Risk, Limited Evidence",
+    "decision_recommendation": "Manual Review Recommended",
+    "decision_explanation": "14-day risk score is 0.74 (elevated) but only 43 days of maintenance history are available and key maintenance fields have low availability. Do not auto-escalate based on risk score alone. A manual inspection is required to verify the prediction before scheduling proactive maintenance."
   }
 ]
