@@ -34,5 +34,29 @@
     "pm_history_available": false,
     "data_sufficiency_status": "LIMITED",
     "explanation": "Short observation window and missing repair logs reduce data sufficiency for model confidence."
+  },
+  {
+    "machine_id": "MAC-0088",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "history_days": 43,
+    "fault_field_availability": 0.54,
+    "repair_duration_availability": 0.47,
+    "downtime_availability": 0.61,
+    "pm_history_available": false,
+    "data_sufficiency_status": "LIMITED",
+    "explanation": "Only 43 days of maintenance records are available. Fault-field and repair-duration data are partially missing. PM history is unavailable. Interpret prediction cautiously — manual review may be required."
+  },
+  {
+    "machine_id": "MAC-0051",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "history_days": 420,
+    "fault_field_availability": 0.88,
+    "repair_duration_availability": 0.85,
+    "downtime_availability": 0.91,
+    "pm_history_available": true,
+    "data_sufficiency_status": "GOOD",
+    "explanation": "Over 13 months of maintenance history with good field availability supports a lower-risk prediction for this machine."
   }
 ]

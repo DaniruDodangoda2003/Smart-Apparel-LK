@@ -11,7 +11,49 @@
     "downtime_30d_hours": 9.2,
     "mtbf_days": 41,
     "mttr_hours": 3.8,
-    "repeat_fault_count_90d": 2
+    "repeat_fault_count_90d": 2,
+    "recent_events": [
+      {
+        "date": "2026-08-20",
+        "event_type": "Breakdown",
+        "fault": "Thread tension failure",
+        "repair_duration_hours": 3.5,
+        "downtime_hours": 4.1,
+        "status": "Resolved"
+      },
+      {
+        "date": "2026-08-08",
+        "event_type": "Breakdown",
+        "fault": "Feed dog misalignment",
+        "repair_duration_hours": 4.0,
+        "downtime_hours": 4.8,
+        "status": "Resolved"
+      },
+      {
+        "date": "2026-07-28",
+        "event_type": "Breakdown",
+        "fault": "Bobbin case jam",
+        "repair_duration_hours": 3.9,
+        "downtime_hours": 0.3,
+        "status": "Resolved"
+      },
+      {
+        "date": "2026-07-14",
+        "event_type": "Preventive Maintenance",
+        "fault": "—",
+        "repair_duration_hours": 1.5,
+        "downtime_hours": 1.5,
+        "status": "Completed"
+      },
+      {
+        "date": "2026-06-10",
+        "event_type": "Inspection",
+        "fault": "Minor wear noted",
+        "repair_duration_hours": 0.5,
+        "downtime_hours": 0.5,
+        "status": "Completed"
+      }
+    ]
   },
   {
     "machine_id": "MAC-0043",
@@ -25,6 +67,64 @@
     "downtime_30d_hours": 0.0,
     "mtbf_days": 156,
     "mttr_hours": 2.5,
-    "repeat_fault_count_90d": 0
+    "repeat_fault_count_90d": 0,
+    "recent_events": [
+      {
+        "date": "2026-08-18",
+        "event_type": "Preventive Maintenance",
+        "fault": "—",
+        "repair_duration_hours": 1.5,
+        "downtime_hours": 1.5,
+        "status": "Completed"
+      },
+      {
+        "date": "2026-03-01",
+        "event_type": "Breakdown",
+        "fault": "Looper timing drift",
+        "repair_duration_hours": 2.5,
+        "downtime_hours": 3.0,
+        "status": "Resolved"
+      }
+    ]
+  },
+  {
+    "machine_id": "MAC-0051",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "history_days": 420,
+    "time_since_last_failure_days": 97,
+    "time_since_last_pm_days": 22,
+    "failures_30d": 0,
+    "failures_90d": 1,
+    "downtime_30d_hours": 0.0,
+    "mtbf_days": 128,
+    "mttr_hours": 2.1,
+    "repeat_fault_count_90d": 0,
+    "recent_events": [
+      {
+        "date": "2026-08-10",
+        "event_type": "Preventive Maintenance",
+        "fault": "—",
+        "repair_duration_hours": 1.0,
+        "downtime_hours": 1.0,
+        "status": "Completed"
+      },
+      {
+        "date": "2026-05-27",
+        "event_type": "Breakdown",
+        "fault": "Differential feed slip",
+        "repair_duration_hours": 2.0,
+        "downtime_hours": 2.5,
+        "status": "Resolved"
+      },
+      {
+        "date": "2026-04-15",
+        "event_type": "Inspection",
+        "fault": "—",
+        "repair_duration_hours": 0.5,
+        "downtime_hours": 0.5,
+        "status": "Completed"
+      }
+    ]
   }
 ]

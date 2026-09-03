@@ -9,28 +9,28 @@
         "feature_value": 3,
         "shap_value": 0.31,
         "direction": "INCREASES_RISK",
-        "display_text": "Recent breakdown frequency increased the model-attributed risk."
+        "display_text": "3 breakdowns in the last 30 days increased the model-attributed risk."
       },
       {
         "feature": "time_since_last_pm_days",
         "feature_value": 64,
         "shap_value": 0.24,
         "direction": "INCREASES_RISK",
-        "display_text": "Time elapsed since last preventive maintenance increases risk."
+        "display_text": "64 days since last preventive maintenance increases risk."
       },
       {
         "feature": "downtime_30d_hours",
         "feature_value": 9.2,
         "shap_value": 0.18,
         "direction": "INCREASES_RISK",
-        "display_text": "High recent downtime hours contribute to elevated risk."
+        "display_text": "9.2 hours of downtime in the past 30 days contributes to elevated risk."
       },
       {
         "feature": "mtbf_days",
         "feature_value": 41,
         "shap_value": 0.11,
         "direction": "INCREASES_RISK",
-        "display_text": "Lower mean time between failures increases risk."
+        "display_text": "MTBF of 41 days (relatively short) increases risk attribution."
       }
     ]
   },
@@ -44,28 +44,63 @@
         "feature_value": 0,
         "shap_value": 0.28,
         "direction": "DECREASES_RISK",
-        "display_text": "Lack of recent breakdowns decreased the model-attributed risk."
+        "display_text": "No breakdowns in the last 30 days decreased the model-attributed risk."
       },
       {
         "feature": "time_since_last_pm_days",
         "feature_value": 14,
         "shap_value": 0.22,
         "direction": "DECREASES_RISK",
-        "display_text": "Recent preventive maintenance decreases risk."
+        "display_text": "Recent preventive maintenance 14 days ago reduces risk."
       },
       {
         "feature": "mtbf_days",
         "feature_value": 156,
         "shap_value": 0.15,
         "direction": "DECREASES_RISK",
-        "display_text": "High mean time between failures decreases risk."
+        "display_text": "MTBF of 156 days (high reliability interval) decreases risk."
       },
       {
         "feature": "downtime_30d_hours",
         "feature_value": 0.0,
         "shap_value": 0.12,
         "direction": "DECREASES_RISK",
-        "display_text": "Zero recent downtime hours contribute to reduced risk."
+        "display_text": "Zero downtime hours in the past 30 days contributes to reduced risk."
+      }
+    ]
+  },
+  {
+    "machine_id": "MAC-0051",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION",
+    "drivers": [
+      {
+        "feature": "failures_30d",
+        "feature_value": 0,
+        "shap_value": 0.25,
+        "direction": "DECREASES_RISK",
+        "display_text": "No breakdowns in the last 30 days reduced the model-attributed risk."
+      },
+      {
+        "feature": "time_since_last_pm_days",
+        "feature_value": 22,
+        "shap_value": 0.18,
+        "direction": "DECREASES_RISK",
+        "display_text": "Recent preventive maintenance 22 days ago reduces risk."
+      },
+      {
+        "feature": "mtbf_days",
+        "feature_value": 128,
+        "shap_value": 0.14,
+        "direction": "DECREASES_RISK",
+        "display_text": "MTBF of 128 days indicates relatively reliable operation."
+      },
+      {
+        "feature": "downtime_30d_hours",
+        "feature_value": 0.0,
+        "shap_value": 0.09,
+        "direction": "DECREASES_RISK",
+        "display_text": "Zero downtime hours in the past 30 days supports lower risk."
       }
     ]
   }
