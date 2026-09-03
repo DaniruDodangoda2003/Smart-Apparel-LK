@@ -5,7 +5,7 @@ import PageHeader from '../../shared/components/PageHeader';
 import LoadingState from '../../shared/components/LoadingState';
 import ErrorState from '../../shared/components/ErrorState';
 import { useAppContext } from '../../shared/context/AppContext';
-import { ArrowLeft, AlertTriangle, CheckCircle, Activity, Eye, Users, Bell } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, CheckCircle, Activity, Eye, Users, Bell, UserCheck, TrendingUp, TrendingDown, Sliders } from 'lucide-react';
 
 export default function C4LineDiagnostics() {
   const { lineId } = useParams();
@@ -16,6 +16,10 @@ export default function C4LineDiagnostics() {
   const [error, setError] = useState(null);
   const [lineRecord, setLineRecord] = useState(null);
   const [diagnostics, setDiagnostics] = useState(null);
+  const [allLines, setAllLines] = useState([]);
+  
+  // What-if control
+  const [wipSensitivity, setWipSensitivity] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,11 +38,12 @@ export default function C4LineDiagnostics() {
         
         setLineRecord({
           ...c4,
-          factory_id: shared ? shared.factory_id : 'Not available',
+          factory_id: shared ? shared.factory_id : 'FAC-001',
           name: shared ? shared.name : 'Unknown',
           status: shared ? shared.status : 'Unknown'
         });
         setDiagnostics(lineDiag);
+        setAllLines(c4Lines);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -93,8 +98,14 @@ export default function C4LineDiagnostics() {
   };
 
   const formatEfficiency = (val) => {
-    if (typeof val === 'number') return `${(val * 100).toFixed(0)}%`;
+    if (typeof val === 'number') return `${(val * 100).toFixed(1)}%`;
     return val;
+  };
+
+  const formatDelta = (val) => {
+    if (typeof val !== 'number') return val;
+    const pct = (val * 100).toFixed(1);
+    return val > 0 ? `+${pct}%` : `${pct}%`;
   };
 
   const ProvenanceBadge = () => (
@@ -111,12 +122,39 @@ export default function C4LineDiagnostics() {
     </div>
   );
 
+  // SHAP Waterfall calculations
+  let totalImpact = 0;
+  if (diagnostics && diagnostics.contributors) {
+    totalImpact = diagnostics.contributors.reduce((sum, c) => sum + c.contribution_score, 0);
+  }
+  
+  // Calculate simulated prediction based on sensitivity slider (+/- 0.05 max impact)
+  const sensitivityImpact = (wipSensitivity / 100) * 0.05;
+  const basePredicted = lineRecord.predicted_efficiency;
+  const simulatedPredicted = basePredicted + sensitivityImpact;
+  
+  const baselineEfficiency = basePredicted - totalImpact;
+
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6 max-w-6xl mx-auto pb-10">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button onClick={() => navigate('/c4')} className="text-gray-500 hover:text-gray-900"><ArrowLeft className="w-5 h-5" /></button>
-          <PageHeader title={`Line Diagnostics: ${lineRecord.line_id}`} description={`Factory: ${lineRecord.factory_id} | Name: ${lineRecord.name}`} />
+          <div>
+            <PageHeader title={`Line Diagnostics`} description={`Analyze model attributions for line performance.`} />
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-600">Line Selector:</span>
+              <select 
+                value={lineId} 
+                onChange={(e) => navigate(`/c4/line/${e.target.value}`)}
+                className="border border-gray-300 rounded px-2 py-1 text-sm font-bold text-blue-700 bg-white"
+              >
+                {allLines.map(l => (
+                  <option key={l.line_id} value={l.line_id}>{l.line_id} - {l.current_style}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
         <ProvenanceBadge />
       </div>
@@ -134,12 +172,8 @@ export default function C4LineDiagnostics() {
               <span className="font-bold text-gray-900">{lineRecord.line_id}</span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-500">Factory ID</span>
-              <span className="font-medium text-gray-700">{lineRecord.factory_id}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-500">Line Status</span>
-              <span className="px-2 py-0.5 bg-gray-100 rounded font-medium border border-gray-200">{lineRecord.status}</span>
+              <span className="text-gray-500">Current Style</span>
+              <span className="font-medium text-gray-700">{lineRecord.current_style || 'Unknown'}</span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
               <span className="text-gray-500">Staffing Level</span>
@@ -150,12 +184,12 @@ export default function C4LineDiagnostics() {
               <span className="px-2 py-0.5 bg-gray-100 text-gray-800 rounded font-medium border border-gray-200">{lineRecord.workforce_alert_status}</span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-500">Precomputed Predicted Efficiency</span>
-              <span className="font-bold text-gray-900">{formatEfficiency(lineRecord.predicted_efficiency)}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-gray-100">
               <span className="text-gray-500">Target Efficiency</span>
               <span className="font-bold text-gray-900">{formatEfficiency(lineRecord.target_efficiency)}</span>
+            </div>
+            <div className="flex justify-between items-center py-2 border-b border-gray-100 bg-blue-50 -mx-2 px-2">
+              <span className="text-blue-700 font-semibold">Predicted Efficiency</span>
+              <span className="font-bold text-blue-900 text-lg">{formatEfficiency(simulatedPredicted)}</span>
             </div>
           </div>
           
@@ -165,57 +199,83 @@ export default function C4LineDiagnostics() {
                 <CheckCircle className="w-4 h-4 text-green-600" /> Acknowledge Finding
               </button>
             )}
-            <button onClick={handleCreateReviewAction} className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700">
+            <button onClick={() => navigate('/c4/operators')} className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded text-sm font-medium hover:bg-indigo-100">
+              <UserCheck className="w-4 h-4" /> View Operator Skill Profiles
+            </button>
+            <button onClick={() => navigate(`/c4/allocation/${lineRecord.line_id}`)} className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700">
+              <Eye className="w-4 h-4" /> Open Allocation Review
+            </button>
+            <button onClick={handleCreateReviewAction} className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-50">
               <Users className="w-4 h-4" /> Create Workforce Review Action
             </button>
-            <div className="flex gap-2">
-              <button onClick={() => navigate(`/c4/allocation/${lineRecord.line_id}`)} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded text-sm font-medium hover:bg-indigo-100">
-                <Eye className="w-4 h-4" /> Open Allocation Review
-              </button>
-              <button onClick={() => navigate('/alerts')} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-50">
-                <Bell className="w-4 h-4" /> Open Alerts
-              </button>
-            </div>
           </div>
         </div>
 
-        {/* Model-Attributed Contributors */}
+        {/* Model-Attributed Contributors (SHAP) */}
         <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col">
           <h3 className="font-bold text-lg border-b pb-2 flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-gray-500" /> Precomputed Workforce Contributors
+              <Activity className="w-5 h-5 text-gray-500" /> Model-Attributed Workforce Contributors
             </div>
           </h3>
           
           {diagnostics ? (
-            <div className="flex-1">
-              <div className="mb-4 text-sm text-gray-600">
-                <span className="font-semibold text-gray-800">Model-Attributed Workforce Contributors — Synthetic Demonstration</span>
-              </div>
-              <div className="space-y-4">
-                {diagnostics.contributors.map((contrib, idx) => (
-                  <div key={idx} className="p-4 bg-gray-50 rounded border border-gray-200">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="font-bold text-gray-800">{contrib.display_label}</span>
-                      <span className="text-xs font-mono bg-gray-200 px-2 py-1 rounded text-gray-700">{contrib.feature_key}</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1 bg-gray-200 h-2 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full ${contrib.direction === 'DECREASES_MODEL_OUTPUT' ? 'bg-red-500' : 'bg-green-500'}`}
-                          style={{ width: `${Math.min(contrib.contribution_score * 100, 100)}%` }}
-                        ></div>
-                      </div>
-                      <span className="text-xs font-semibold text-gray-600 w-16 text-right">
-                        Score: {contrib.contribution_score.toFixed(2)}
+            <div className="flex-1 space-y-6">
+              
+              {/* SHAP Waterfall */}
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-3">Deterministic Output Impact (Synthetic Waterfall)</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded border border-gray-200">
+                    <span className="font-bold text-gray-700 text-sm">Baseline Efficiency</span>
+                    <span className="font-bold">{formatEfficiency(baselineEfficiency)}</span>
+                  </div>
+                  
+                  {diagnostics.contributors.map((contrib, idx) => (
+                    <div key={idx} className="flex justify-between items-center py-2 px-3 pl-8">
+                      <span className="text-sm text-gray-600">{contrib.display_label}</span>
+                      <span className={`text-sm font-bold ${contrib.contribution_score > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {contrib.contribution_score > 0 ? '+' : ''}{(contrib.contribution_score * 100).toFixed(1)}%
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-2">Direction: {contrib.direction}</p>
+                  ))}
+                  
+                  {sensitivityImpact !== 0 && (
+                    <div className="flex justify-between items-center py-2 px-3 pl-8 bg-blue-50 rounded text-blue-800">
+                      <span className="text-sm font-medium">What-If Sensitivity Adjustment</span>
+                      <span className={`text-sm font-bold ${sensitivityImpact > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {sensitivityImpact > 0 ? '+' : ''}{(sensitivityImpact * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center py-2 px-3 bg-blue-100 rounded border border-blue-200">
+                    <span className="font-bold text-blue-900 text-sm">Predicted Efficiency</span>
+                    <span className="font-bold text-blue-900 text-lg">{formatEfficiency(simulatedPredicted)}</span>
                   </div>
-                ))}
+                </div>
+              </div>
+
+              {/* What-If Sensitivity Control */}
+              <div className="bg-gray-50 p-4 rounded border border-gray-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sliders className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm font-bold text-gray-700">Prototype What-If Sensitivity</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="text-xs text-gray-500 w-24">WIP Adjustment</span>
+                  <input 
+                    type="range" 
+                    min="-50" max="50" value={wipSensitivity} 
+                    onChange={(e) => setWipSensitivity(Number(e.target.value))}
+                    className="flex-1"
+                  />
+                  <span className="text-xs font-bold text-blue-700 w-12 text-right">{wipSensitivity > 0 ? '+' : ''}{wipSensitivity}</span>
+                </div>
+                <p className="text-[10px] text-gray-400 mt-2 italic">Updates displayed deterministic scenario outputs.</p>
               </div>
               
-              <div className="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-200 text-sm text-orange-800 flex gap-3">
+              <div className="p-4 bg-orange-50 rounded-lg border border-orange-200 text-sm text-orange-800 flex gap-3">
                 <AlertTriangle className="w-5 h-5 shrink-0" />
                 <div>
                   <p className="font-bold mb-1">Requires Production-Team Review</p>
@@ -229,11 +289,57 @@ export default function C4LineDiagnostics() {
             </div>
           )}
         </div>
-
       </div>
 
+      {/* Operation-Level Breakdown */}
+      {diagnostics && diagnostics.operation_breakdown && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="p-4 border-b border-gray-200">
+            <h3 className="font-bold text-gray-800 text-sm">Operation-Level Breakdown</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-600 border-b">
+                  <th className="p-3 font-medium">Operation Seq</th>
+                  <th className="p-3 font-medium">Operation Name</th>
+                  <th className="p-3 font-medium">Machine Type</th>
+                  <th className="p-3 font-medium">Required SMV</th>
+                  <th className="p-3 font-medium">Current Operator</th>
+                  <th className="p-3 font-medium">Operator Rating</th>
+                  <th className="p-3 font-medium">Bottleneck Severity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {diagnostics.operation_breakdown.map((op, idx) => (
+                  <tr key={idx} className="border-b hover:bg-gray-50">
+                    <td className="p-3 font-bold text-gray-700">{op.operation_seq}</td>
+                    <td className="p-3 font-medium text-gray-900">{op.operation_name}</td>
+                    <td className="p-3 text-gray-600">{op.machine_type}</td>
+                    <td className="p-3 text-gray-600">{op.required_smv.toFixed(2)}</td>
+                    <td className={`p-3 font-medium ${op.current_operator.includes('Absent') ? 'text-red-600' : 'text-gray-800'}`}>
+                      {op.current_operator}
+                    </td>
+                    <td className="p-3 text-gray-600">{op.operator_rating}</td>
+                    <td className="p-3">
+                      <span className={`px-2 py-1 rounded font-bold text-[10px] uppercase border ${
+                        op.bottleneck_severity === 'CRITICAL' ? 'bg-red-100 text-red-700 border-red-200' :
+                        op.bottleneck_severity === 'HIGH' ? 'bg-orange-100 text-orange-700 border-orange-200' :
+                        'bg-gray-100 text-gray-600 border-gray-200'
+                      }`}>
+                        {op.bottleneck_severity}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* Prototype Limitations Notice */}
-      <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-slate-300 space-y-3">
+      <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-slate-300 space-y-3 mt-6">
         <h4 className="font-bold text-white flex items-center gap-2"><AlertTriangle className="w-5 h-5 text-orange-400" /> Prototype Limitations</h4>
         <ul className="list-disc pl-5 space-y-1 text-sm">
           <li>Workforce forecasts are fixed precomputed demonstration outputs.</li>

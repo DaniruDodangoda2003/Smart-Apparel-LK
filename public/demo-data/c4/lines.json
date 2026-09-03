@@ -1,18 +1,50 @@
 [
   {
     "line_id": "LINE-03",
+    "current_style": "Basic T-Shirt",
     "predicted_efficiency": 0.62,
     "target_efficiency": 0.80,
     "staffing_level": "UNDERSTAFFED",
     "workforce_alert_status": "ACTIVE",
-    "output_mode": "DEMO_PRECOMPUTED"
+    "output_mode": "DEMO_PRECOMPUTED",
+    "wip": 450,
+    "active_operators": 18,
+    "shift_impact": 120
+  },
+  {
+    "line_id": "LINE-04",
+    "current_style": "Polo Shirt",
+    "predicted_efficiency": 0.635,
+    "target_efficiency": 0.80,
+    "staffing_level": "UNDERSTAFFED",
+    "workforce_alert_status": "ACTIVE",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "wip": 520,
+    "active_operators": 22,
+    "shift_impact": 150
+  },
+  {
+    "line_id": "LINE-02",
+    "current_style": "Hoodie",
+    "predicted_efficiency": 0.68,
+    "target_efficiency": 0.82,
+    "staffing_level": "UNDERSTAFFED",
+    "workforce_alert_status": "ACTIVE",
+    "output_mode": "DEMO_PRECOMPUTED",
+    "wip": 800,
+    "active_operators": 16,
+    "shift_impact": 90
   },
   {
     "line_id": "LINE-01",
+    "current_style": "Athletic Wear",
     "predicted_efficiency": 0.82,
     "target_efficiency": 0.80,
     "staffing_level": "OPTIMAL",
     "workforce_alert_status": "NORMAL",
-    "output_mode": "DEMO_PRECOMPUTED"
+    "output_mode": "DEMO_PRECOMPUTED",
+    "wip": 250,
+    "active_operators": 24,
+    "shift_impact": 0
   }
 ]
