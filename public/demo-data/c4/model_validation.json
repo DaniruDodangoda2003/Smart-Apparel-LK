@@ -1,0 +1,42 @@
+{
+  "last_updated": "2026-09-01T10:00:00Z",
+  "selected_model": "CatBoost",
+  "models": [
+    {
+      "name": "CatBoost",
+      "mae": 0.042,
+      "rmse": 0.055,
+      "r2": 0.91,
+      "training_time_sec": 12.5,
+      "validation_status": "APPROVED",
+      "notes": "Best performance on imbalanced categorical features (worker skills)."
+    },
+    {
+      "name": "LightGBM",
+      "mae": 0.045,
+      "rmse": 0.061,
+      "r2": 0.89,
+      "training_time_sec": 4.2,
+      "validation_status": "REJECTED",
+      "notes": "Fastest training but slightly higher variance on small datasets."
+    },
+    {
+      "name": "XGBoost",
+      "mae": 0.048,
+      "rmse": 0.065,
+      "r2": 0.87,
+      "training_time_sec": 18.0,
+      "validation_status": "REJECTED",
+      "notes": "Solid baseline, but CatBoost handles missing absenteeism data better."
+    },
+    {
+      "name": "Random Forest",
+      "mae": 0.065,
+      "rmse": 0.082,
+      "r2": 0.81,
+      "training_time_sec": 8.5,
+      "validation_status": "REJECTED",
+      "notes": "Used as baseline. Does not capture non-linear interactions well."
+    }
+  ]
+}
