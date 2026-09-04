@@ -1307,7 +1307,7 @@ export default function C2RunReview() {
             const isCompleted = idx < activeStep;
             const isActive = idx === activeStep;
             const isPending = idx > activeStep;
-            const isBlocked = activeStep === 3 && gateResult.status === 'BLOCKED' && idx > 3;
+            const isBlocked = gateResult.status === 'BLOCKED' && idx > 3;
 
             let bgColor = 'bg-white';
             let textColor = 'text-gray-500';
@@ -1331,7 +1331,10 @@ export default function C2RunReview() {
             return (
               <div 
                 key={idx} 
-                className={`flex-1 min-w-[150px] text-center p-3 border-b-2 border-r border-gray-200 last:border-r-0 transition-colors ${bgColor} ${textColor} ${borderColor}`}
+                onClick={() => {
+                  if (!isBlocked) setActiveStep(idx);
+                }}
+                className={`flex-1 min-w-[150px] text-center p-3 border-b-2 border-r border-gray-200 last:border-r-0 transition-colors ${isBlocked ? 'cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'} ${bgColor} ${textColor} ${borderColor}`}
               >
                 <div className="flex flex-col items-center justify-center gap-1.5">
                   <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${iconBg}`}>
