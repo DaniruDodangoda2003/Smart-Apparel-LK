@@ -30,9 +30,11 @@
       { "feature": "Machine Availability", "value": "98%", "impact": "positive", "magnitude": 0.02, "interpretation": "Machines are in good working condition." }
     ],
     "matching_constraints": [
-      { "worker": "OP-012", "operation": "Overlock", "match_score": 95, "status": "PASS", "note": "" },
-      { "worker": "OP-051", "operation": "Flatlock", "match_score": 45, "status": "REVIEW", "note": "Low competency grade (C)." },
-      { "worker": "OP-032", "operation": "Single Needle", "match_score": 85, "status": "PASS", "note": "Cross-trained float operator." }
+      { "worker": "OP-012", "operation": "Overlock", "match_score": 95, "status": "PASS", "note": "Strong operation and machine compatibility" },
+      { "worker": "OP-051", "operation": "Flatlock", "match_score": 45, "status": "NOT RECOMMENDED", "note": "Low competency grade (C)" },
+      { "worker": "OP-032", "operation": "Flatlock", "match_score": 88, "status": "PASS", "note": "Cross-trained and machine eligible" },
+      { "worker": "OP-032", "operation": "Single Needle", "match_score": 85, "status": "PASS", "note": "Cross-trained float operator" },
+      { "worker": "OP-014", "operation": "Single Needle", "match_score": 92, "status": "PASS", "note": "Strong competency and experience" }
     ],
     "recommended_roster": [
       { "worker_id": "OP-012", "name": "Kamal Perera", "operation": "Overlock", "machine": "Juki MO-6800", "match_score": 95, "availability": "Present" },

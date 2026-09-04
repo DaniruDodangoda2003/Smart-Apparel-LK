@@ -46,8 +46,8 @@
     "data_classification": "SYNTHETIC_DEMONSTRATION"
   },
   {
-    "operator_id": "OP-009",
-    "legacy_id": "WRK-009",
+    "operator_id": "OP-051",
+    "legacy_id": "WRK-051",
     "display_name": "Kumari W.",
     "grade": "Grade C",
     "primary_machine": "Single Needle",
@@ -64,6 +64,52 @@
       "speed": "Low",
       "quality": "Average",
       "versatility": "Low"
+    },
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION"
+  },
+  {
+    "operator_id": "OP-012",
+    "legacy_id": "WRK-012",
+    "display_name": "Kamal Perera",
+    "grade": "Grade A",
+    "primary_machine": "Overlock",
+    "secondary_machine": "Single Needle",
+    "synthetic_skill_tags": ["Overlock", "Safety Stitch"],
+    "synthetic_preference": "Standard shifts",
+    "years_of_experience": 6,
+    "historical_efficiency": 0.92,
+    "attendance_rate": 0.96,
+    "overtime_past_7_days": 2,
+    "availability": "AVAILABLE",
+    "current_line": "Float",
+    "competency_evidence": {
+      "speed": "High",
+      "quality": "High",
+      "versatility": "High"
+    },
+    "output_mode": "DEMO_PRECOMPUTED",
+    "data_classification": "SYNTHETIC_DEMONSTRATION"
+  },
+  {
+    "operator_id": "OP-014",
+    "legacy_id": "WRK-014",
+    "display_name": "Saman Kumara",
+    "grade": "Grade B",
+    "primary_machine": "Single Needle",
+    "secondary_machine": "Overlock",
+    "synthetic_skill_tags": ["Single Needle", "Hemming"],
+    "synthetic_preference": "Standard shifts",
+    "years_of_experience": 3,
+    "historical_efficiency": 0.81,
+    "attendance_rate": 0.93,
+    "overtime_past_7_days": 0,
+    "availability": "AVAILABLE",
+    "current_line": "Float",
+    "competency_evidence": {
+      "speed": "Average",
+      "quality": "High",
+      "versatility": "Medium"
     },
     "output_mode": "DEMO_PRECOMPUTED",
     "data_classification": "SYNTHETIC_DEMONSTRATION"

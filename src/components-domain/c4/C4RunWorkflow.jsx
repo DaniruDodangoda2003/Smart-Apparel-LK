@@ -21,8 +21,65 @@ export default function C4RunWorkflow() {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 8;
 
+  const [proposedRoster, setProposedRoster] = useState([]);
+  const [rosterSummary, setRosterSummary] = useState({});
+
   // Local state for approval process
   const [decisionNotes, setDecisionNotes] = useState('');
+
+  useEffect(() => {
+    if (run && workers.length > 0) {
+      const allocatedWorkers = new Set();
+      const roster = [];
+      let covered = 0;
+      let constraintsResolved = 0;
+
+      run.line_requirements.required_operations.forEach(reqOp => {
+        const candidates = run.matching_constraints
+          .filter(mc => mc.operation === reqOp && mc.status === 'PASS' && !allocatedWorkers.has(mc.worker))
+          .sort((a, b) => b.match_score - a.match_score);
+          
+        if (candidates.length > 0) {
+          const selected = candidates[0];
+          allocatedWorkers.add(selected.worker);
+          const workerProfile = workers.find(w => w.operator_id === selected.worker);
+          
+          let reason = 'Highest suitable match score';
+          if (reqOp === 'Overlock') reason = 'Highest eligible Overlock match';
+          else if (reqOp === 'Flatlock') reason = 'Best available Flatlock-compatible operator';
+          else if (reqOp === 'Single Needle') reason = 'Strongest eligible Single Needle match';
+
+          roster.push({
+            worker_id: selected.worker,
+            name: workerProfile ? workerProfile.display_name : selected.worker,
+            operation: reqOp,
+            machine: reqOp === 'Overlock' ? 'Juki MO-6800' : reqOp === 'Flatlock' ? 'Pegasus W500' : 'Brother S-7100A',
+            match_score: selected.match_score,
+            reason
+          });
+          covered++;
+          constraintsResolved++;
+        }
+      });
+      
+      const excluded = run.matching_constraints.filter(mc => mc.status === 'NOT RECOMMENDED').length;
+
+      setProposedRoster(roster);
+      setRosterSummary({
+        coveredOperations: covered,
+        totalOperations: run.line_requirements.required_operations.length,
+        eligibleSelected: covered,
+        constraintsResolved: constraintsResolved,
+        excludedLowFit: excluded
+      });
+    }
+  }, [run, workers]);
+
+  const shapData = run?.shap_contributors || [];
+  const efficiencyData = run?.comparison ? [
+    { name: 'Current', efficiency: Number((run.comparison.baseline.efficiency * 100).toFixed(1)) },
+    { name: 'Recommended', efficiency: Number((run.comparison.recommended.efficiency * 100).toFixed(1)) }
+  ] : [];
 
   useEffect(() => {
     const fetchRunData = async () => {
@@ -121,33 +178,33 @@ export default function C4RunWorkflow() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Line ID</label>
-                    <input type="text" disabled value={run.line_id} className="mt-1 block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-500" />
+                    <input type="text" defaultValue={run.line_id} className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Garment Style</label>
-                    <input type="text" disabled value={run.style_id} className="mt-1 block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-500" />
+                    <input type="text" defaultValue={run.style_id} className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Target Output (Units)</label>
-                    <input type="number" disabled value={run.line_requirements.target_output} className="mt-1 block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm font-semibold text-gray-900" />
+                    <input type="number" defaultValue={run.line_requirements.target_output} className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm font-semibold text-gray-900 focus:ring-blue-500 focus:border-blue-500" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Required SMV</label>
-                    <input type="number" disabled value={run.line_requirements.smv} className="mt-1 block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-900" />
+                    <input type="number" step="0.1" defaultValue={run.line_requirements.smv} className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500" />
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Required Workers</label>
-                    <input type="number" disabled value={run.line_requirements.required_workers} className="mt-1 block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-900" />
+                    <input type="number" defaultValue={run.line_requirements.required_workers} className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Planned Hours</label>
-                    <input type="number" disabled value={run.line_requirements.planned_hours} className="mt-1 block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-900" />
+                    <input type="number" defaultValue={run.line_requirements.planned_hours} className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Overtime Limit (Hours)</label>
-                    <input type="number" disabled value={run.line_requirements.overtime_limit_hours} className="mt-1 block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-900" />
+                    <input type="number" defaultValue={run.line_requirements.overtime_limit_hours} className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Required Operations</label>
@@ -243,12 +300,12 @@ export default function C4RunWorkflow() {
               <h2 className="text-xl font-bold text-gray-800 mb-2">4. SHAP Explainability</h2>
               <p className="text-sm text-gray-500 mb-6">Contribution to predicted productivity (Model Attribution)</p>
               
-              <div className="flex-1 min-h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={run.shap_contributors} layout="vertical" margin={{ top: 5, right: 30, left: 120, bottom: 5 }}>
+              <div className="w-full min-w-0 mt-4">
+                <ResponsiveContainer width="100%" height={320}>
+                  <BarChart data={shapData} layout="vertical" margin={{ top: 5, right: 30, left: 140, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                     <XAxis type="number" hide />
-                    <YAxis dataKey="feature" type="category" tick={{fontSize: 12, fontWeight: 600, fill: '#374151'}} width={120} />
+                    <YAxis dataKey="feature" type="category" tick={{fontSize: 12, fontWeight: 600, fill: '#374151'}} width={140} />
                     <Tooltip 
                       cursor={{fill: '#f3f4f6'}}
                       content={({ active, payload }) => {
@@ -267,7 +324,7 @@ export default function C4RunWorkflow() {
                       }}
                     />
                     <Bar dataKey="magnitude" radius={[0, 4, 4, 0]} barSize={24}>
-                      {run.shap_contributors.map((entry, index) => (
+                      {shapData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.impact === 'positive' ? '#10b981' : '#ef4444'} />
                       ))}
                     </Bar>
@@ -285,7 +342,7 @@ export default function C4RunWorkflow() {
                   <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
                       <th className="p-3 font-medium text-gray-600">Operator</th>
-                      <th className="p-3 font-medium text-gray-600">Assigned Operation</th>
+                      <th className="p-3 font-medium text-gray-600">Candidate Operation</th>
                       <th className="p-3 font-medium text-gray-600 text-center">Match Score</th>
                       <th className="p-3 font-medium text-gray-600 text-center">Status</th>
                       <th className="p-3 font-medium text-gray-600">Constraint Notes</th>
@@ -297,14 +354,14 @@ export default function C4RunWorkflow() {
                         <td className="p-3 font-bold text-gray-700">{mc.worker}</td>
                         <td className="p-3">{mc.operation}</td>
                         <td className="p-3 text-center">
-                          <span className={`font-semibold ${mc.match_score >= 90 ? 'text-green-600' : mc.match_score >= 70 ? 'text-orange-500' : 'text-red-600'}`}>
+                          <span className={`font-semibold ${mc.match_score >= 80 ? 'text-green-600' : mc.match_score >= 60 ? 'text-orange-500' : 'text-red-600'}`}>
                             {mc.match_score}%
                           </span>
                         </td>
                         <td className="p-3 text-center">
                           {mc.status === 'PASS' && <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700"><CheckCircle className="w-3 h-3"/> PASS</span>}
                           {mc.status === 'REVIEW' && <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-orange-100 text-orange-700"><AlertTriangle className="w-3 h-3"/> REVIEW</span>}
-                          {mc.status === 'BLOCKED' && <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-700"><XCircle className="w-3 h-3"/> BLOCKED</span>}
+                          {(mc.status === 'BLOCKED' || mc.status === 'NOT RECOMMENDED') && <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-700"><XCircle className="w-3 h-3"/> {mc.status}</span>}
                         </td>
                         <td className="p-3 text-xs text-gray-500 italic">{mc.note || 'No conflicts detected.'}</td>
                       </tr>
@@ -321,7 +378,13 @@ export default function C4RunWorkflow() {
               <div className="border border-indigo-200 rounded-lg overflow-hidden shadow-sm">
                 <div className="bg-indigo-50 px-4 py-3 border-b border-indigo-200 flex items-center justify-between">
                   <h3 className="font-bold text-indigo-900 flex items-center gap-2"><Users className="w-5 h-5"/> Proposed Roster</h3>
-                  <span className="text-xs font-semibold text-indigo-600 bg-white px-2 py-1 rounded border border-indigo-200">AI Recommended</span>
+                  <span className="text-xs font-semibold text-indigo-600 bg-white px-2 py-1 rounded border border-indigo-200">Recommended Allocation</span>
+                </div>
+                <div className="bg-white px-4 py-3 border-b border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div><span className="text-gray-500">Operations Covered:</span> <span className="font-bold text-gray-800">{rosterSummary.coveredOperations}/{rosterSummary.totalOperations}</span></div>
+                  <div><span className="text-gray-500">Eligible Workers Selected:</span> <span className="font-bold text-gray-800">{rosterSummary.eligibleSelected}</span></div>
+                  <div><span className="text-gray-500">Constraints Resolved:</span> <span className="font-bold text-gray-800">{rosterSummary.constraintsResolved}</span></div>
+                  <div><span className="text-gray-500">Excluded Low-Fit:</span> <span className="font-bold text-gray-800">{rosterSummary.excludedLowFit}</span></div>
                 </div>
                 <table className="w-full text-left text-sm bg-white">
                   <thead>
@@ -331,10 +394,11 @@ export default function C4RunWorkflow() {
                       <th className="p-3 font-medium">Operation</th>
                       <th className="p-3 font-medium">Machine</th>
                       <th className="p-3 font-medium">Match</th>
+                      <th className="p-3 font-medium">Selection Reason</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {run.recommended_roster.map(r => (
+                    {proposedRoster.map(r => (
                       <tr key={r.worker_id} className="hover:bg-gray-50">
                         <td className="p-3 font-bold text-indigo-600">{r.worker_id}</td>
                         <td className="p-3 font-medium text-gray-800">{r.name}</td>
@@ -343,6 +407,7 @@ export default function C4RunWorkflow() {
                         <td className="p-3">
                           <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">{r.match_score}%</span>
                         </td>
+                        <td className="p-3 text-xs text-gray-500 italic">{r.reason}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -386,23 +451,18 @@ export default function C4RunWorkflow() {
                 </div>
               </div>
 
-              <div className="flex-1 bg-white border border-gray-200 rounded-lg p-6 min-h-[300px]">
+              <div className="w-full min-w-0 bg-white border border-gray-200 rounded-lg p-6 mt-4">
                 <h3 className="text-sm font-bold text-gray-700 mb-4 text-center">Efficiency Improvement</h3>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={[
-                    { name: 'Baseline (Current)', eff: run.comparison.baseline.efficiency * 100 },
-                    { name: 'Recommended', eff: run.comparison.recommended.efficiency * 100 }
-                  ]} layout="vertical" margin={{ top: 0, right: 30, left: 40, bottom: 0 }}>
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 30, left: 40, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                     <XAxis type="number" domain={[0, 100]} tickFormatter={v => `${v}%`} />
                     <YAxis dataKey="name" type="category" width={120} tick={{fontSize: 12, fontWeight: 600}} />
-                    <Tooltip cursor={{fill: '#f3f4f6'}} formatter={(value) => [`${value.toFixed(1)}%`, 'Efficiency']} />
-                    <Bar dataKey="eff" barSize={32} radius={[0, 4, 4, 0]}>
-                      {
-                        [run.comparison.baseline.efficiency, run.comparison.recommended.efficiency].map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={index === 0 ? '#9ca3af' : '#2563eb'} />
-                        ))
-                      }
+                    <Tooltip cursor={{fill: '#f3f4f6'}} formatter={(value) => [`${value}%`, 'Efficiency']} />
+                    <Bar dataKey="efficiency" barSize={32} radius={[0, 4, 4, 0]}>
+                      {efficiencyData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.name === 'Current' ? '#9ca3af' : '#2563eb'} />
+                      ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
