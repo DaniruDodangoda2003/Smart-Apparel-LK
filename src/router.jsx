@@ -18,9 +18,8 @@ import C3FleetOverview from './components-domain/c3/C3FleetOverview';
 import C3MachineAnalysis from './components-domain/c3/C3MachineAnalysis';
 import C3MaintenanceActions from './components-domain/c3/C3MaintenanceActions';
 import C4WorkforceOverview from './components-domain/c4/C4WorkforceOverview';
-import C4LineDiagnostics from './components-domain/c4/C4LineDiagnostics';
-import C4OperatorProfiles from './components-domain/c4/C4OperatorProfiles';
-import C4AllocationReview from './components-domain/c4/C4AllocationReview';
+import C4RunWorkflow from './components-domain/c4/C4RunWorkflow';
+import C4ModelValidation from './components-domain/c4/C4ModelValidation';
 
 export const router = createBrowserRouter([
   {
@@ -96,16 +95,12 @@ export const router = createBrowserRouter([
         element: <C4WorkforceOverview />
       },
       {
-        path: 'c4/line/:lineId',
-        element: <C4LineDiagnostics />
+        path: 'c4/run/:runId',
+        element: <C4RunWorkflow />
       },
       {
-        path: 'c4/operators',
-        element: <C4OperatorProfiles />
-      },
-      {
-        path: 'c4/allocation/:lineId',
-        element: <C4AllocationReview />
+        path: 'c4/model-validation',
+        element: <C4ModelValidation />
       },
       // Shared
       {

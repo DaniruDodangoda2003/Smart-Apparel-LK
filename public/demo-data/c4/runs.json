@@ -1,0 +1,113 @@
+[
+  {
+    "run_id": "C4-RUN-1001",
+    "line_id": "LINE-03",
+    "style_id": "Polo Shirt",
+    "shift": "Morning",
+    "target_output": 1200,
+    "predicted_productivity": 0.62,
+    "risk_level": "HIGH",
+    "allocation_status": "PENDING",
+    "line_requirements": {
+      "target_output": 1200,
+      "smv": 15.2,
+      "required_workers": 18,
+      "planned_hours": 8,
+      "overtime_limit_hours": 2,
+      "required_operations": ["Overlock", "Flatlock", "Single Needle"]
+    },
+    "prediction_kpis": {
+      "target_productivity": 0.80,
+      "predicted_productivity": 0.62,
+      "predicted_output": 930,
+      "output_gap": 270,
+      "confidence": "85%"
+    },
+    "shap_contributors": [
+      { "feature": "Operator Skill Level", "value": "Grade C Average", "impact": "negative", "magnitude": 0.08, "interpretation": "High concentration of Grade C operators reduces expected output." },
+      { "feature": "Absenteeism", "value": "2 Operators", "impact": "negative", "magnitude": 0.05, "interpretation": "Missing staff causes bottleneck at overlock stations." },
+      { "feature": "WIP Buffer", "value": "High", "impact": "negative", "magnitude": 0.03, "interpretation": "Excessive WIP indicates unbalanced line." },
+      { "feature": "Machine Availability", "value": "98%", "impact": "positive", "magnitude": 0.02, "interpretation": "Machines are in good working condition." }
+    ],
+    "matching_constraints": [
+      { "worker": "OP-012", "operation": "Overlock", "match_score": 95, "status": "PASS", "note": "" },
+      { "worker": "OP-051", "operation": "Flatlock", "match_score": 45, "status": "REVIEW", "note": "Low competency grade (C)." },
+      { "worker": "OP-032", "operation": "Single Needle", "match_score": 85, "status": "PASS", "note": "Cross-trained float operator." }
+    ],
+    "recommended_roster": [
+      { "worker_id": "OP-012", "name": "Kamal Perera", "operation": "Overlock", "machine": "Juki MO-6800", "match_score": 95, "availability": "Present" },
+      { "worker_id": "OP-032", "name": "Nimal Fernando", "operation": "Flatlock", "machine": "Pegasus W500", "match_score": 88, "availability": "Present" },
+      { "worker_id": "OP-014", "name": "Saman Kumara", "operation": "Single Needle", "machine": "Brother S-7100A", "match_score": 92, "availability": "Present" }
+    ],
+    "comparison": {
+      "baseline": {
+        "efficiency": 0.62,
+        "output": 930,
+        "bottlenecks": 2,
+        "idle_time_mins": 120,
+        "overtime_hours": 3
+      },
+      "recommended": {
+        "efficiency": 0.78,
+        "output": 1170,
+        "bottlenecks": 0,
+        "idle_time_mins": 45,
+        "overtime_hours": 1
+      }
+    }
+  },
+  {
+    "run_id": "C4-RUN-1002",
+    "line_id": "LINE-01",
+    "style_id": "Athletic Wear",
+    "shift": "Evening",
+    "target_output": 1500,
+    "predicted_productivity": 0.82,
+    "risk_level": "LOW",
+    "allocation_status": "APPROVED",
+    "line_requirements": {
+      "target_output": 1500,
+      "smv": 12.5,
+      "required_workers": 24,
+      "planned_hours": 8,
+      "overtime_limit_hours": 0,
+      "required_operations": ["Overlock", "Flatlock"]
+    },
+    "prediction_kpis": {
+      "target_productivity": 0.80,
+      "predicted_productivity": 0.82,
+      "predicted_output": 1537,
+      "output_gap": -37,
+      "confidence": "92%"
+    },
+    "shap_contributors": [
+      { "feature": "Operator Skill Level", "value": "Grade A Average", "impact": "positive", "magnitude": 0.06, "interpretation": "High competency drives line efficiency." },
+      { "feature": "Attendance", "value": "100%", "impact": "positive", "magnitude": 0.04, "interpretation": "Full workforce present." },
+      { "feature": "Machine Reliability", "value": "99%", "impact": "positive", "magnitude": 0.02, "interpretation": "No expected breakdowns." }
+    ],
+    "matching_constraints": [
+      { "worker": "OP-001", "operation": "Overlock", "match_score": 98, "status": "PASS", "note": "" },
+      { "worker": "OP-002", "operation": "Flatlock", "match_score": 96, "status": "PASS", "note": "" }
+    ],
+    "recommended_roster": [
+      { "worker_id": "OP-001", "name": "Anura Kumara", "operation": "Overlock", "machine": "Juki MO-6800", "match_score": 98, "availability": "Present" },
+      { "worker_id": "OP-002", "name": "Sunil Shantha", "operation": "Flatlock", "machine": "Pegasus W500", "match_score": 96, "availability": "Present" }
+    ],
+    "comparison": {
+      "baseline": {
+        "efficiency": 0.81,
+        "output": 1518,
+        "bottlenecks": 0,
+        "idle_time_mins": 30,
+        "overtime_hours": 0
+      },
+      "recommended": {
+        "efficiency": 0.82,
+        "output": 1537,
+        "bottlenecks": 0,
+        "idle_time_mins": 25,
+        "overtime_hours": 0
+      }
+    }
+  }
+]
